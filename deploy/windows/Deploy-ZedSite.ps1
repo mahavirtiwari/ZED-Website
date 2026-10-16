@@ -24,11 +24,14 @@
     photos). Files are added to shared\media; existing newer files are kept.
 .PARAMETER AdminEmail
     Also creates (or resets the password of) this CMS superadmin; you type the password.
+.PARAMETER HttpsEmail
+    After deploying, also gets the free Let's Encrypt SSL certificate and turns
+    on HTTPS (runs Enable-ZedHttps.ps1 -Email <address>), if HTTPS is not on yet.
 .PARAMETER Rollback
     Switches back to the previous release instead of installing a new one.
 
 .EXAMPLE
-    powershell -ExecutionPolicy Bypass -File .\Deploy-ZedSite.ps1 -MediaZip C:\ZED-setup\ZED-media-20261016-1500.zip -AdminEmail you@example.com
+    powershell -ExecutionPolicy Bypass -File .\Deploy-ZedSite.ps1 -MediaZip C:\ZED-setup\ZED-media-20261016-1500.zip -AdminEmail you@example.com -HttpsEmail you@example.com
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File .\Deploy-ZedSite.ps1
 .EXAMPLE
@@ -37,6 +40,7 @@
 param(
     [string]$MediaZip,
     [string]$AdminEmail,
+    [string]$HttpsEmail,
     [switch]$Rollback,
     [string]$HostName = 'zedcms.umon.in',
     [string]$SiteRoot = 'C:\inetpub\zedcms',
@@ -236,9 +240,20 @@ try {
     }
 
     Test-Site
+    if ($HttpsEmail -and -not $https) {
+        Write-Step 'Free SSL certificate (Let''s Encrypt)'
+        try {
+            & (Join-Path $PSScriptRoot 'Enable-ZedHttps.ps1') -Email $HttpsEmail -HostName $HostName -SiteRoot $SiteRoot -SiteName $SiteName -PoolName $PoolName
+        } catch {
+            # the new release is live on http; only the certificate step failed
+            Write-Warning "The website is deployed, but the SSL certificate step failed: $($_.Exception.Message)"
+            Write-Warning 'Fix the cause (usually port 80 closed in Azure) and run scripts\Enable-ZedHttps.ps1 -Email <address>.'
+        }
+        $https = (Get-EnvValue $envFile 'APP_URL') -like 'https://*'
+    }
     Write-Host ''
     Write-Host "Deployed. Website: $(Get-EnvValue $envFile 'APP_URL')/   CMS: $(Get-EnvValue $envFile 'APP_URL')/cms" -ForegroundColor Green
-    if (-not $https) { Write-Host 'Next: scripts\Enable-ZedHttps.ps1 (free Let''s Encrypt certificate).' }
+    if (-not $https) { Write-Host 'Next: scripts\Enable-ZedHttps.ps1 -Email you@example.com (free Let''s Encrypt SSL certificate).' }
 } catch {
     Write-Host ''
     Write-Host "Deployment stopped: $($_.Exception.Message)" -ForegroundColor Red

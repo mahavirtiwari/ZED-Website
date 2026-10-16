@@ -247,7 +247,7 @@ table(["#", "Check", "How"], [
     ["5", "Port 80/443 not used by another program on the server.",
      "If IIS already hosts other sites that is fine: this site gets its own host name binding."],
     ["6", "You can open the private GitHub repository.", "Sign in at github.com; mahavirtiwari/ZED-Website must be visible."],
-    ["7", "An e-mail address for certificate expiry notices (Let's Encrypt).", "Any monitored mailbox."],
+    ["7", "An e-mail address for the free Let's Encrypt SSL certificate account.", "Any monitored mailbox."],
     ["8", "(Recommended) A recent export of the production database and the uploaded files "
           "(uploads, slider, photogallery folders) from zed.msme.gov.in.",
      "Ask the production hosting team. Without them, staging uses the database copy in the repository "
@@ -372,11 +372,26 @@ step("B5. Check the site in a browser")
 para("Open http://zedcms.umon.in/ from your Dell. You should see the ZED home page with logos, slider, dashboard "
      "figures and the language (Bhashini) button at the top right.")
 
-step("B6. Switch on HTTPS (once)")
+step("B6. Free SSL certificate and HTTPS (once)")
+para("The site uses a **free SSL certificate from Let's Encrypt** (no cost, no account to buy, trusted by all browsers). "
+     "One command gets it and switches the site to HTTPS:")
 code(".\\Enable-ZedHttps.ps1 -Email your.name@example.com")
-para("It downloads win-acme, gets a free Let's Encrypt certificate for zedcms.umon.in, adds the https binding in IIS "
-     "and then switches the website to HTTPS: `APP_URL=https://zedcms.umon.in`, secure cookies, and every http "
-     "address redirects to https. win-acme renews the certificate automatically (Task Scheduler).")
+para("It downloads win-acme (the Let's Encrypt client for Windows), gets the certificate for zedcms.umon.in, adds the "
+     "https binding in IIS and then switches the website to HTTPS: `APP_URL=https://zedcms.umon.in`, secure cookies, "
+     "and every http address redirects to https. It ends by showing the certificate's expiry date and the automatic "
+     "renewal task.")
+para("Tip: on the first deployment you can do B4 and B6 in one go by adding `-HttpsEmail your.name@example.com` "
+     "to the `Deploy-ZedSite.ps1` command.")
+table(["Free certificate facts", ""], [
+    ["Cost", "Free (Let's Encrypt, a non-profit certificate authority)."],
+    ["Valid for", "90 days (Let's Encrypt is gradually making this shorter)."],
+    ["Renewal", "Automatic: the Windows scheduled task **win-acme renew** runs daily and renews about 30 days before expiry, "
+                "then updates IIS by itself. Nothing to do by hand."],
+    ["Requirement", "Port 80 must stay open to the internet (Azure inbound rule): every renewal is checked over http. "
+                    "The website keeps that check path out of the https redirect."],
+    ["Expiry e-mails", "Let's Encrypt no longer sends them (since 2025). Check now and then with "
+                       "`.\\Enable-ZedHttps.ps1 -Status` (Part D)."],
+], widths=[3.5, 13.5])
 note("Let's Encrypt must reach http://zedcms.umon.in/ from the internet. If it fails, check the Azure inbound rule "
      "for port 80 (checklist item 4).", "warn")
 note("Using your own certificate (for example *.umon.in)? Import the .pfx on the server (double-click > Local Machine), "
@@ -446,7 +461,9 @@ table(["Task", "How (PowerShell as administrator)"], [
     ["Database backup", "`& \"$env:ZED_MYSQL_BIN\\mysqldump.exe\" -u root -p --single-transaction --default-character-set=utf8mb4 --result-file=C:\\ZED-setup\\backup-zedcms.sql zedcms` "
                         "(use --result-file, not >, which would save the file as UTF-16)"],
     ["Uploaded files backup", "Copy `C:\\inetpub\\zedcms\\shared\\media`"],
-    ["Certificate renewal", "Automatic (Task Scheduler > win-acme renew). Manual: `C:\\win-acme\\wacs.exe --renew`"],
+    ["SSL certificate status (monthly)", "From any release `scripts` folder: `.\\Enable-ZedHttps.ps1 -Status` - shows the "
+                                         "expiry date, days left and the renewal task (and recreates the task if missing)."],
+    ["SSL certificate renewal", "Automatic (Task Scheduler > win-acme renew). Renew now by hand: `C:\\win-acme\\wacs.exe --renew`"],
     ["Update PHP to the newest 8.4", "Run `.\\Install-ZedServer.ps1` again from the latest scripts folder."],
 ], widths=[4.5, 12.5])
 
@@ -466,7 +483,9 @@ table(["Problem", "Likely cause", "Fix"], [
     ["News or gallery images missing", "Uploaded files not on staging.", "Deploy a media package (A4, `-MediaZip`)."],
     ["Cannot stay signed in to the CMS on http://", "Secure cookies switched on without HTTPS.",
      "Run `Enable-ZedHttps.ps1`, or set `SESSION_SECURE_COOKIE=false` in `.env` (Part D)."],
-    ["Let's Encrypt fails", "Port 80 not reachable from the internet.", "Azure NSG inbound rule for TCP 80; Windows Firewall rule \"ZED website\"."],
+    ["Free SSL certificate cannot be issued or renewed", "Port 80 not reachable from the internet, or DNS changed.",
+     "Azure NSG inbound rule for TCP 80; Windows Firewall rule \"ZED website\"; `nslookup zedcms.umon.in`. Then `C:\\win-acme\\wacs.exe --renew`."],
+    ["Browser warns the certificate expired", "Automatic renewal stopped.", "`.\\Enable-ZedHttps.ps1 -Status`; fix as above; `C:\\win-acme\\wacs.exe --renew --force`."],
     ["Dashboard shows CMS numbers instead of live ones", "Server cannot reach loginzed.msme.gov.in.",
      "Check outbound internet; figures are cached for 10 minutes."],
     ["Composer error during deploy", "No internet, or GitHub/Packagist blocked.", "Allow outbound HTTPS; run Deploy again."],
@@ -481,8 +500,8 @@ table(["Script", "Where", "Main options"], [
     ["`Export-ZedMedia.ps1`", "Dell / any Windows PC", "`-WebRoot <folder with uploads, slider, photogallery>`, `-OutDir`"],
     ["`Install-ZedServer.ps1`", "Server (admin)", "`-SkipMySql`, `-MySqlVersion 8.4.11`, `-PhpVersion 8.4`"],
     ["`Initialize-ZedDatabase.ps1`", "Server (admin)", "`-DumpFile`, `-SkipUpgradeScripts`, `-Replace`"],
-    ["`Deploy-ZedSite.ps1`", "Server (admin)", "`-MediaZip`, `-AdminEmail`, `-Rollback`, `-HostName`"],
-    ["`Enable-ZedHttps.ps1`", "Server (admin)", "`-Email`, `-SkipCertificate`"],
+    ["`Deploy-ZedSite.ps1`", "Server (admin)", "`-MediaZip`, `-AdminEmail`, `-HttpsEmail`, `-Rollback`, `-HostName`"],
+    ["`Enable-ZedHttps.ps1`", "Server (admin)", "`-Email`, `-Status`, `-SkipCertificate`"],
 ], widths=[5, 4, 8])
 
 doc.add_heading("Folders on the server", level=2)
