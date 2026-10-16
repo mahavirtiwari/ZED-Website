@@ -24,7 +24,7 @@
   <div class=" ">
         <div class=" ">
             <div class=" ">
-            <iframe frameborder="0" src="https://login.zed.org.in/Incentive/DetailsMobile?ct=Bronze&id="  title="Iframe Example"></iframe>
+            <iframe frameborder="0" src="{{ $details->page_embed_url }}" title="{{ $details->page_name }}"></iframe>
             </div>
         </div>
     </div><!-- .container -->

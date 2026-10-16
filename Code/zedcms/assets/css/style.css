@@ -7322,3 +7322,6 @@ div#filters {
 .zed-table-fixed { table-layout: fixed; }
 .zed-table-fixed .zed-col-half { width: 50%; }
 .zed-table-fixed .zed-col-param { width: 150px; }
+
+/* embedded web page (CMS > Pages > Special content) */
+.zed-embed-frame { width: 100%; min-height: 1600px; height: 100%; border: 0; }

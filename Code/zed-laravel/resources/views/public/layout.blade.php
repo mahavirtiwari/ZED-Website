@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- home Page start  seo  -->
     <?php if(isset($home_seo)&& isset($home_seo['home_seo_title'])){?>
-    <title><?php echo $home_seo['home_seo_title']?> | Zero Defect Zero Effect</title>
+    <title><?php echo $home_seo['home_seo_title']?> | {{ site_text('site_title_suffix') }}</title>
     <?php } ?>
     <?php 
     if(isset($home_seo)&& isset($home_seo['home_seo_keywords'])){
@@ -19,7 +19,7 @@
     <!-- home page end seo -->
     <!-- Page start SEO -->
     <?php   if(isset($details)&& isset($details->page_seo_title)){?>
-    <title><?php echo $details->page_seo_title ?> | ZED - Zero Defect Zero Effect</title>
+    <title><?php echo $details->page_seo_title ?> | {{ site_text('site_title_suffix') }}</title>
     <?php } ?>
     <?php 
     if(isset($details)&& isset($details->page_seo_keywords)){
@@ -32,7 +32,7 @@
     <!-- page end seo -->
     <!-- post start seo  -->
     <?php   if(isset($details)&& isset($details->post_seo_title)){?>
-    <title><?php echo $details->post_seo_title ?> | ZED - Zero Defect Zero Effect </title>
+    <title><?php echo $details->post_seo_title ?> | {{ site_text('site_title_suffix') }}</title>
     <?php } ?>
     <?php 
     if(isset($details)&& isset($details->post_seo_keywords)){
@@ -46,7 +46,7 @@
     <!-- gallery start seo  -->
     <?php if($page=='gallery'){ ?>
     <?php if(isset($gallery_seo)&& isset($gallery_seo['gallery_seo_title'])){?>
-    <title><?php echo $gallery_seo['gallery_seo_title']?> | ZED - Zero Defect Zero Effect</title>
+    <title><?php echo $gallery_seo['gallery_seo_title']?> | {{ site_text('site_title_suffix') }}</title>
     <?php } ?>
     <?php 
     if(isset($gallery_seo)&& isset($gallery_seo['gallery_seo_keywords'])){
@@ -61,7 +61,7 @@
     <!-- gallery Month -->
     <?php if($page=='individual-gallery'){ ?>
     <?php if(isset($gallery_seo)&& isset($gallery_seo['gallery_seo_title'])){?>
-    <title>Gallery | <?php echo e($month); ?> | <?php echo e($year);?> | ZED - Zero Defect Zero Effect</title>
+    <title>Gallery | <?php echo e($month); ?> | <?php echo e($year);?> | {{ site_text('site_title_suffix') }}</title>
     <?php } ?>
     <?php 
     if(isset($gallery_seo)&& isset($gallery_seo['gallery_seo_keywords'])){
@@ -73,6 +73,13 @@
     ?>
     <?php } ?>
     <!-- end gallery Month -->
+    <!-- pages without their own title / description (CMS > Settings > Header and footer) -->
+    <?php $hasOwnTitle = isset($home_seo['home_seo_title']) || isset($details->page_seo_title) || isset($details->post_seo_title)
+        || ($page == 'gallery' && isset($gallery_seo['gallery_seo_title'])) || $page == 'individual-gallery'; ?>
+    @unless ($hasOwnTitle)
+    <title>{{ ['contactus' => 'Contact Us', 'news' => 'News', 'video' => 'Videos', 'search' => 'Search', 'gallery' => 'Gallery'][$page] ?? 'ZED' }} | {{ site_text('site_title_suffix') }}</title>
+    @if (site_text('site_meta_description') !== '')<meta name="description" content="{{ site_text('site_meta_description') }}">@endif
+    @endunless
     <link href="{{ asset('assets/images') }}/fav.png" rel="shortcut icon" />
     <!-- Plugin css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css') }}/font-awesome.min.css" media="all" />

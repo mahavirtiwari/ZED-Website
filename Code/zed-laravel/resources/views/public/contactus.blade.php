@@ -41,7 +41,7 @@
                             <li>
                                 <i class="flaticon-time-left"></i>
                                 <div class="contact-content">
-                                    <p>Working days<br>Mon-Fri, 9:00 AM - 5:30 PM</p>
+                                    <p>Working days<br>{{ site_text('working_hours') }}</p>
                                 </div>
                             </li>
                             <li>
@@ -69,11 +69,10 @@
                                 </div>
                             </li>
                             <?php } ?>
-                            <?php if(isset($counters['label_name_1']) && !empty($counters['label_name_1'])){ ?>
+                            <?php if(isset($counters['label_name_2']) && !empty($counters['label_name_2'])){ ?>
                             <li class="contact-address-no-pad-li">
                                 <i class="flaticon-vibrating-phone"></i>
                                 <div class="contact-content">
-                                    <?php // <p>011-23708371</p> ?>
                                     <p><b><?php echo $counters['label_name_2']; ?></b><br><?php echo $counters['tp_phone_1']; ?><br><?php echo $counters['tp_phone_2']; ?><br><?php echo $counters['tp_phone_3']; ?>
                                     </p>
                                 </div>

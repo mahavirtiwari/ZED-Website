@@ -17,6 +17,78 @@ if (! function_exists('zed_setting')) {
     }
 }
 
+if (! function_exists('setting_default')) {
+    /** Built-in value of a setting (config/cms.php "settings"), shown until it is saved in the CMS. */
+    function setting_default(string $label): string
+    {
+        static $defaults = null;
+        if ($defaults === null) {
+            $defaults = [];
+            foreach (config('cms.settings') as [, , $fields]) {
+                foreach ($fields as $name => $field) {
+                    $defaults[$name] = (string) ($field[2] ?? '');
+                }
+            }
+        }
+
+        return $defaults[$label] ?? '';
+    }
+}
+
+if (! function_exists('site_text')) {
+    /**
+     * Text set in CMS > Settings. Never saved: the built-in default. Saved empty:
+     * '' (templates hide the item).
+     */
+    function site_text(string $label): string
+    {
+        return zed_setting($label) ?? setting_default($label);
+    }
+}
+
+if (! function_exists('site_flag')) {
+    /** Show/hide switch from CMS > Settings. */
+    function site_flag(string $label): bool
+    {
+        $value = zed_setting($label);
+
+        return ($value === null || $value === '' ? setting_default($label) : $value) !== '0';
+    }
+}
+
+if (! function_exists('site_image')) {
+    /** Image from CMS > Settings, or the built-in image. */
+    function site_image(string $label): string
+    {
+        $value = (string) zed_setting($label);
+
+        return $value !== '' ? media_url($value) : asset(setting_default($label));
+    }
+}
+
+if (! function_exists('site_url')) {
+    /** Link from CMS > Settings: absolute URLs as they are, "/page" relative to the site. */
+    function site_url(string $label): string
+    {
+        $value = trim(site_text($label));
+
+        return $value === '' || preg_match('#^https?://#i', $value) ? $value : url($value);
+    }
+}
+
+if (! function_exists('youtube_embed_url')) {
+    /** youtube.com/watch?v=ID or youtu.be/ID -> youtube.com/embed/ID (embed URLs unchanged). */
+    function youtube_embed_url(?string $url): string
+    {
+        $url = trim((string) $url);
+        if (preg_match('#(?:youtube\.com/watch\?(?:.*&)?v=|youtu\.be/)([A-Za-z0-9_-]{6,})#', $url, $m)) {
+            return 'https://www.youtube.com/embed/'.$m[1];
+        }
+
+        return $url;
+    }
+}
+
 if (! function_exists('captcha_enabled')) {
     /** Captcha switch (CMS > Security). On unless the setting is '0'. */
     function captcha_enabled(string $label): bool

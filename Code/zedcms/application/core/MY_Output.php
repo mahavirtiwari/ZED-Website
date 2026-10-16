@@ -20,7 +20,8 @@ class MY_Output extends CI_Output
 			'font-src'    => array('https://fonts.gstatic.com'),
 			'img-src'     => array('https:'),
 			'connect-src' => array('https://desk.zoho.in'),
-			'frame-src'   => array('https://www.youtube.com', 'https://www.youtube-nocookie.com', 'https://msmekawach.org.in', 'https://www.google.com', 'https://desk.zoho.in'),
+			// embedded pages: ZED Certified MSMEs, Benefits/Incentives, KAWACH, videos, Zoho
+			'frame-src'   => array('https://www.youtube.com', 'https://www.youtube-nocookie.com', 'https://loginzed.msme.gov.in', 'https://login.zed.org.in', 'https://msmekawach.org.in', 'https://www.google.com', 'https://desk.zoho.in'),
 			'form-action' => array('https://desk.zoho.in'),
 		));
 	}

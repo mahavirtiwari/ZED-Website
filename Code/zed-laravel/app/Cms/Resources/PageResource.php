@@ -26,12 +26,29 @@ class PageResource extends Resource
 
     public static string $orderBy = 'created_on';
 
+    /** Special content a page can show (resources/views/public/page.blade.php). */
+    public const WIDGETS = [
+        '' => 'None (just the page content)',
+        'embed' => 'Embedded web page below the content',
+        'embed_only' => 'Embedded web page instead of the content',
+        'embed_page' => 'Full-width embedded web page (no side menu)',
+        'faq' => 'FAQ list (from the FAQs module)',
+        'verify' => 'ZED certificate verification form',
+        'maturity' => 'ZED maturity matrix, chosen by sector',
+        'guidance' => 'Guidance documents, chosen by sector',
+        'parameters' => 'ZED parameters, chosen by sector',
+    ];
+
     public static function fields(): array
     {
         return [
             Field::text('page_name', 'Page name')->required()->max(200),
             Field::select('page_type', 'Page type', ['1' => 'Individual page', '2' => 'Tabbed page (with side menu)', '3' => 'Home page block'])->required()->width(6),
             Field::select('page_menu', 'Side menu', fn () => [0 => '— none —'] + Options::menus())->width(6)->help('For tabbed pages: the menu whose pages are listed at the side.'),
+            Field::select('page_widget', 'Special content', self::WIDGETS)->width(6),
+            Field::url('page_embed_url', 'Address of the embedded web page')->max(500)->required()->width(6)
+                ->showIf('page_widget', ['embed', 'embed_only', 'embed_page'])->placeholder('https://')
+                ->help('Must start with https://. The site allows this address to be embedded automatically.'),
             Field::editor('page_description', 'Content'),
             Field::textarea('page_short_description', 'Home page short description')->showIf('page_type', ['3']),
             Field::number('page_home_order', 'Home page order')->showIf('page_type', ['3'])->width(4),
@@ -64,6 +81,14 @@ class PageResource extends Resource
         if (Slugs::taken($record->page_slug, page: $record)) {
             return 'The URL "'.$record->page_slug.'" is already used by another page or news item. Please change the page name.';
         }
+        if (str_starts_with((string) $record->page_widget, 'embed')) {
+            if (! preg_match('#^https://[a-z0-9.-]+(:\d+)?(/.*)?$#i', (string) $record->page_embed_url)) {
+                return 'The embedded page address must start with https://';
+            }
+        } else {
+            $record->page_embed_url = null;
+        }
+        $record->page_widget = $record->page_widget === '' ? null : $record->page_widget;
 
         return null;
     }

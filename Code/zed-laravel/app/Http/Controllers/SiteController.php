@@ -105,13 +105,19 @@ class SiteController extends Controller
             'slug' => $slug,
         ];
 
-        if ($slug === 'faq' || $slug === 'faqs') {
+        // special content chosen in CMS > Pages > Special content
+        $widget = (string) ($page->page_widget ?? '');
+        if (str_starts_with($widget, 'embed') && ($host = parse_url((string) $page->page_embed_url, PHP_URL_HOST))) {
+            // let the browser load the embedded page (SecurityHeaders adds it to frame-src)
+            $request->attributes->set('csp.frame-src', ['https://'.$host]);
+        }
+        if ($widget === 'faq') {
             return $this->render('faq', $data + ['faqs' => SiteData::faqs()]);
         }
-        if ($slug === 'benefitsincentives') {
+        if ($widget === 'embed_page') {
             return $this->render('incentives', $data);
         }
-        if ($slug === 'verify-zed-certificate') {
+        if ($widget === 'verify') {
             $data += $this->verifyCertificate($request);
         }
 

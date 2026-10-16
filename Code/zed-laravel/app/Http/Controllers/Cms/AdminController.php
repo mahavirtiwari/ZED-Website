@@ -39,6 +39,11 @@ class AdminController extends Controller
         return $config;
     }
 
+    /**
+     * Settings screen from config/cms.php "settings". Each field is
+     * [label, type, default, help]; types: text, textarea, number, url, image,
+     * toggle (show/hide), select:a=A,b=B and heading (a sub-title, not saved).
+     */
     public function settings(string $group): View
     {
         [$title, , $fields] = $this->settingsGroup($group);
@@ -51,15 +56,47 @@ class AdminController extends Controller
     {
         [$title, , $fields] = $this->settingsGroup($group);
         $rules = [];
-        foreach ($fields as $name => [$label, $type]) {
+        foreach ($fields as $name => $field) {
+            $type = $field[1];
+            if ($type === 'heading') {
+                continue;
+            }
             $rules[$name] = match (true) {
                 $type === 'number' => ['nullable', 'integer'],
-                str_starts_with($type, 'select:') => ['required', 'in:'.implode(',', array_keys(self::selectOptions($type)))],
+                $type === 'toggle' => ['sometimes', 'in:0,1'],
+                $type === 'image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,gif,webp,svg', 'max:2048'],
+                $type === 'url' => ['nullable', 'string', 'max:500', 'regex:#^(https?://|/)#i'],
+                str_starts_with($type, 'select:') => ['sometimes', 'required', 'in:'.implode(',', array_keys(self::selectOptions($type)))],
                 default => ['nullable', 'string', 'max:5000'],
             };
         }
-        $data = $request->validate($rules);
-        GlobalConfig::put(array_map(fn ($v) => (string) $v, $data));
+        $data = $request->validate($rules, ['regex' => 'The :attribute must start with https:// or /.'],
+            array_map(fn ($f) => $f[0], $fields));
+
+        $values = [];
+        foreach ($fields as $name => $field) {
+            $type = $field[1];
+            if ($type === 'heading') {
+                continue;
+            }
+            if ($type === 'image') {
+                if ($request->hasFile($name)) {
+                    $file = $request->file($name);
+                    $fileName = Str::random(32).'.'.strtolower($file->getClientOriginalExtension() ?: $file->guessExtension());
+                    $file->move(rtrim(config('zed.storage_root'), '/\\').DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'site', $fileName);
+                    $values[$name] = '/uploads/site/'.$fileName;
+                } elseif ($request->boolean('reset_'.$name)) {
+                    $values[$name] = ''; // back to the built-in image
+                }
+
+                continue;
+            }
+            if (! $request->exists($name)) {
+                continue; // not on the submitted form: keep the saved value
+            }
+            $values[$name] = (string) ($data[$name] ?? '');
+        }
+        GlobalConfig::put($values);
 
         return back()->with('status', $title.' saved.');
     }

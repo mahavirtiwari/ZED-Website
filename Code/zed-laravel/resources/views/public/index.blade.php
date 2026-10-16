@@ -16,12 +16,12 @@
                     </div>
                     <div class="col-md-5 col-md-pull-7 col-xs-12"> 
                             <div class="first-component-items"> 
-                                    <h2 class="section-header-new">MSME Sustainable (ZED) Certification</h2> 
+                                    <h2 class="section-header-new">{{ site_text('home_hero_title') }}</h2> 
                                     <div>
-                                          <p>MSME Sustainable (ZED) Certification is an extensive drive to create awareness amongst MSMEs about Zero Defect Zero Effect (ZED) practices and motivate and incentivise them for ZED Certification while also encouraging them to become MSME Champions.</p> 
+                                          <p><?php echo site_text('home_hero_text'); ?></p> 
                                           <div class="buttons-block"> 
-                                            <a href="https://loginzed.msme.gov.in/Msme/Login" class="btn btn-zed btn-block">START WITH ZED</a>
-                                            <a href="<?php echo base_url().'brief-history'?>" class="btn btn-default btn-block">READ MORE</a>
+                                            @if (site_text('home_hero_button1_text') !== '')<a href="{{ site_url('home_hero_button1_url') }}" class="btn btn-zed btn-block">{{ site_text('home_hero_button1_text') }}</a>@endif
+                                            @if (site_text('home_hero_button2_text') !== '')<a href="{{ site_url('home_hero_button2_url') }}" class="btn btn-default btn-block">{{ site_text('home_hero_button2_text') }}</a>@endif
                                           </div>
                                         </div>        
                               </div>
@@ -30,7 +30,7 @@
               <div class="row">
               <?php if(!empty($breaking_news)){ ?> 
                    <div class="col-md-12 zed-announcement">  
-                       <p>IMPORTANT ANNOUNCEMENT</p>
+                       <p>{{ site_text('home_announcement_label') }}</p>
                        <div class="zed-announcement-item ">
                          <marquee onmouseover="this.stop();" onmouseout="this.start();" direction="left">
                            <?php $i=0;foreach ($breaking_news as $key => $value) { ?>
@@ -51,12 +51,13 @@
             </div>
         </div>
 </section>
+@if (site_flag('home_show_initiatives') && !empty($allprograms))
 <section class="bg-services-section">
   <div class="container">
     <div class="services-section">
       <div class="row">
         <div class="col-md-12">
-          <h2 class="section-header">Our Initiatives</h2> 
+          <h2 class="section-header">{{ site_text('home_title_initiatives') }}</h2> 
       </div>
         <?php 
           foreach( $allprograms as $value ) {
@@ -68,8 +69,7 @@
                     <h4><?php echo $value->name;?></h4>
                     <small>(<?php echo $value->caption;?>)</small>
                     <br>
-                    <a href="<?php echo $value->link;?>" target="_blank" class="btn btn-zed btn-block">REGISTER NOW
-                    </a>  
+                    <a href="<?php echo $value->link;?>" target="_blank" class="btn btn-zed btn-block"><?php echo e(trim((string) $value->button_name) !== '' ? $value->button_name : 'REGISTER NOW'); ?></a>  
                 </div>
               </div><!-- .services-content --> 
           </div><!-- .col-md-3 -->
@@ -81,13 +81,14 @@
     </div><!-- .services-section -->
   </div><!-- .container -->
 </section>
-<?php if(isset($incentives ) && !empty($incentives )){?>
+@endif
+<?php if(site_flag('home_show_incentives') && isset($incentives ) && !empty($incentives )){?>
 <section class="bg-services-section">
   <div class="container">
     <div class="services-section">
       <div class="row">
         <div class="col-md-12">
-          <h2 class="section-header">Benefits/Incentives</h2> 
+          <h2 class="section-header">{{ site_text('home_title_incentives') }}</h2> 
       </div>
         <?php 
           foreach( $incentives as $value ) {
@@ -112,6 +113,7 @@
   </div><!-- .container -->
 </section>
 <?php } ?>
+@if (site_flag('home_show_about'))
 <section class="bg-about-greenforest" id="about">
   <div class="container">
     <div class="row">
@@ -130,7 +132,7 @@
               { ?>
               <p><?php echo $social_urls['about_short_description'];?></p>
               <?php } ?>
-              <a href="/brief-history" class="btn btn-default">Read More</a>
+              @if (site_text('home_about_button_text') !== '')<a href="{{ site_url('home_about_button_url') }}" class="btn btn-default">{{ site_text('home_about_button_text') }}</a>@endif
               </div>
               <div>
                 <div class="about-greenforest-img hide">
@@ -148,48 +150,35 @@
       </div><!-- .about-greenforest -->
     </div><!-- .row -->
   </div><!-- .container -->
-</section> 
+</section>
+@endif 
+@if (site_flag('home_show_steps'))
 <section class="zed-4-step-process">
   <div class="container">
     <div class="row ">
-      <!-- <div class="col-md-offset-2 col-md-8 text-center">
-        <h2 class="section-header">The 3 Step ZED Certification Process</h2>
-        <p>Addressing the nation on India's 68th Independence DAy, Hon'ble Prime Minister Shri Narendra Modi urged 
-          the industry, especially the Micro, Small and Medium Enterprises (MSMEs) of
-        </p>
-      </div> -->
-      <!-- <a href="https://msme.zedcs.com" target="_blank"><img src="<?php echo isset($ratingImage->image_path) ?  base_url().$ratingImage->image_path : '';?>" alt="ZED 4 Step Process" class="img-responsive ZED-4-Step"></a> -->
-      <!-- <img src="<?php echo isset($ratingImage->image_path) ?  base_url().$ratingImage->image_path : '';?>" alt="ZED 4 Step Process" class="img-responsive ZED-4-Step">  -->
       <div class="col-md-12">
-        <img src="assets/images/Steps-img.png" alt=" " />
+        {{-- CMS > ZED rating image (first active one); the built-in image when there is none --}}
+        <img src="{{ !empty($ratingImage->image_path) ? media_url($ratingImage->image_path) : asset('assets/images/Steps-img.png') }}" alt="{{ !empty($ratingImage->name) ? $ratingImage->name : 'ZED certification steps' }}" />
       </div>
     </div>
   </div>
 </section>
-<!-- <section class="bg-highlight-news">
+@endif
+@if (site_flag('home_show_notifications') && !empty($allnotifications))
+<section class="bg-highlight-news">
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
         <div class="text-center news-sec">
-          <?php 
-          foreach( $allnotifications as $value ) {
-            if($value->type=='link'){
-            ?>
-            <a class="btn btn-news btn-lg" href="<?php echo $value->link;?>" target="_blank"><?php echo $value->name;?></a>
-            <?php
-            }
-            else{
-            ?>
-            <a class="btn btn-news btn-lg" href="<?php echo base_url().'/'.$value->file_path;?>" target="_blank"><?php echo $value->name;?></a>
-            <?php
-            }
-           }
-          ?>
+          @foreach ($allnotifications as $value)
+            <a class="btn btn-news btn-lg" href="{{ $value->type === 'link' ? $value->link : media_url($value->file_path) }}" target="_blank" rel="noopener">{{ $value->name }}</a>
+          @endforeach
         </div>
       </div>
     </div>
   </div>
-</section> -->
+</section>
+@endif
 <?php if($counters['dashboard_status']==1){?>
 <section class="bg-count2-section">
   <img class="dashboard-bricks" src="/assets/images/svgicons/dashboard-bricks.svg"/>
@@ -198,8 +187,9 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-        <h2 class="section-header">Dashboard</h2> 
+        <h2 class="section-header">{{ site_text('home_title_dashboard') }}</h2> 
           </div>
+        <?php foreach (['MsmeRegistered' => 'msme_registered', 'Pledge' => 'pledge', 'BronzeCertified' => 'bronze_certified', 'SilverCertified' => 'silver_certified', 'GoldCertified' => 'gold_certified'] as $liveKey => $cmsKey) { if (!isset($counters['counts'][$liveKey]) && !empty($counters[$cmsKey])) { $counters['counts'][$liveKey] = $counters[$cmsKey]; } } ?>
         <div class="count-option">
           <div class="row">
             <?php if( $counters['masmes_participated_in_awareness_programmes'] > 0){?>
@@ -208,7 +198,7 @@
                 <!-- <i><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="48px" height="48px" viewBox="0 0 48 48"><g  transform="translate(0, 0)"><path fill="none" stroke="#333" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" d="M20,46H2v-1.242c0-1.775,1.164-3.334,2.866-3.838C6.46,40.448,8.604,40,11,40c2.356,0,4.514,0.456,6.125,0.932C18.83,41.436,20,42.994,20,44.773V46z" stroke-linejoin="miter"/><circle fill="none" stroke="#333" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" cx="11" cy="31" r="5" stroke-linejoin="miter"/><path fill="none" stroke="#333" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" d="M46,46H28v-1.242c0-1.775,1.164-3.334,2.866-3.838C32.46,40.448,34.604,40,37,40c2.356,0,4.514,0.456,6.125,0.932C44.83,41.436,46,42.994,46,44.773V46z" stroke-linejoin="miter"/><circle fill="none" stroke="#333" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" cx="37" cy="31" r="5" stroke-linejoin="miter"/><path data-color="color-2" fill="none" stroke="#333" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" d="M33,22H15v-1.242c0-1.775,1.164-3.334,2.866-3.838C19.46,16.448,21.604,16,24,16c2.356,0,4.514,0.456,6.125,0.932C31.83,17.436,33,18.994,33,20.773V22z" stroke-linejoin="miter"/><circle data-color="color-2" fill="none" stroke="#333" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" cx="24" cy="7" r="5" stroke-linejoin="miter"/></g></svg></i>
                 <br> -->
                 <span class="counter aware-count-clr" data-num="<?php echo $counters['masmes_participated_in_awareness_programmes']; ?>"><?php echo $counters['masmes_participated_in_awareness_programmes']; ?></span>
-                <h4> Awareness Programme participants</h4>
+                <h4>{{ site_text('counter_label_awareness') }}</h4>
               </div><!-- .count-items -->
             </div><!-- .col-md-3 -->
           <?php } ?>
@@ -220,7 +210,7 @@
                 <br> -->
                 <!-- <span class="counter msmer-count-clr" data-num="<?php //echo $counters['msme_registered']; ?>"><?php //echo $counters['msme_registered']; ?></span> -->
                 <span class="counter msmer-count-clr" data-num="<?php echo $counters['counts']['MsmeRegistered']; ?>"><?php echo $counters['counts']['MsmeRegistered']; ?></span>
-                <h4>MSME Registered</h4>
+                <h4>{{ site_text('counter_label_registered') }}</h4>
               </div><!-- .count-items -->
             </div><!-- .col-md-3 -->
           <?php } ?>
@@ -235,7 +225,7 @@
                 <span class="counter msmer-count-clr" data-num="<?php echo $counters['counts']['Pledge']; ?>">
 				<?php echo $counters['counts']['Pledge']; ?></span>
 
-                <h4>Pledge</h4>
+                <h4>{{ site_text('counter_label_pledge') }}</h4>
               </div><!-- .count-items -->
             </div><!-- .col-md-3 -->
           <?php } ?>
@@ -247,7 +237,7 @@
                 <span class="counter msmer-count-clr" data-num="<?php echo $counters['counts']['FinancialSupport']; ?>">
 				<?php echo "&#8377;" . $counters['counts']['FinancialSupport'];  ?>
 				</span>
-                <h4>Financial Support</h4>
+                <h4>{{ site_text('counter_label_financial') }}</h4>
               </div><!-- .count-items -->
             </div><!-- .col-md-3 -->
           <?php } ?>
@@ -262,7 +252,7 @@
                 <br> -->
                 <!-- <span class="counter bronze-count-clr" data-num="<?php //echo $counters['bronze_certified']; ?>"><?php //echo $counters['bronze_certified']; ?></span> -->
                 <span class="counter msmer-count-clr" data-num="<?php echo $counters['counts']['BronzeCertified']; ?>"><?php echo $counters['counts']['BronzeCertified']; ?></span>
-                <h4>Bronze Certified</h4>
+                <h4>{{ site_text('counter_label_bronze') }}</h4>
               </div><!-- .count-items -->
             </div><!-- .col-md-3 -->
             <?php } ?>
@@ -275,7 +265,7 @@
                 <br> -->
                 <!-- <span class="counter silver-count-clr" data-num="<?php //echo $counters['silver_certified']; ?>"><?php //echo $counters['silver_certified']; ?></span> -->
                 <span class="counter msmer-count-clr" data-num="<?php echo $counters['counts']['SilverCertified']; ?>"><?php echo $counters['counts']['SilverCertified']; ?></span>
-                <h4>Silver Certified</h4>
+                <h4>{{ site_text('counter_label_silver') }}</h4>
               </div><!-- .count-items -->
             </div><!-- .col-md-3 -->
             <?php } ?>
@@ -288,7 +278,7 @@
                 <br> -->
                 <!-- <span class="counter gold-count-clr" data-num="<?php //echo $counters['gold_certified']; ?>"><?php //echo $counters['gold_certified']; ?></span> -->
                 <span class="counter msmer-count-clr" data-num="<?php echo $counters['counts']['GoldCertified']; ?>"><?php echo $counters['counts']['GoldCertified']; ?></span>
-                <h4>Gold Certified</h4>
+                <h4>{{ site_text('counter_label_gold') }}</h4>
               </div><!-- .count-items -->
             </div><!-- .col-md-3 -->
           <?php } ?>
@@ -306,6 +296,7 @@
     </div>
   </div>
 </section> --> 
+@if (site_flag('home_show_blocks'))
 <section class="bg-services-section bg-services-section-2" id="services">
   <div class="container">
     <div class="row">
@@ -317,7 +308,7 @@
           <div class="col-md-4 col-sm-6 col-xs-6">
             <div class="our-services-box">
               <div class="our-services-items">
-                <i><?php echo $icons[$i];?></i>
+                <i><?php echo $icons[$i % count($icons)];?></i>
                 <div class="our-services-content">
                   <h4><a href="<?php echo base_url();?><?php echo $value->page_slug;?>"><?php echo $value->page_name;?></a></h4>
                   <p align="justify"><?php echo trim($value->page_short_description);?></p>
@@ -332,14 +323,15 @@
     </div><!-- .row -->
   </div><!-- .container -->
 </section>
-<?php if(!empty($news)){ ?>
+@endif
+<?php if(site_flag('home_show_news') && !empty($news)){ ?>
 <section class="bg-upcoming-events" id="events">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
       <div class="upcoming-events">
         <div class="section-header">
-          <h2>Latest News</h2>
+          <h2>{{ site_text('home_title_news') }}</h2>
         </div><!-- .section-header -->
         <div class="owl-latestnews owl-carousel owl-theme"> 
           <?php foreach($news as $value) { ?>
@@ -372,7 +364,7 @@
       
       </div><!-- .col-md-12 -->
       <div class="col-md-12 text-center">
-            <a href="#" class="btn btn-default">VIEW ALL</a>    
+            @if (site_text('home_news_button_text') !== '')<a href="{{ url('news') }}" class="btn btn-default">{{ site_text('home_news_button_text') }}</a>@endif    
       </div><!-- .col-md-12 -->
       </div><!-- .row -->
     </div><!-- .container -->
@@ -401,13 +393,13 @@
     <!-- End campaian video Section -->
   
     <!--Start testimonials section-->
-  <?php if(!empty($testimonials))
+  <?php if(site_flag('home_show_testimonials') && !empty($testimonials))
     {
   ?>
   <section class="testimonials-section">
         <div class="container">
             <div class="section-header">
-                <h2>Testimonials</h2>
+                <h2>{{ site_text('home_title_testimonials') }}</h2>
             </div><!-- .section-header -->
             <div class="row">
                 <div class="col-md-12">
@@ -445,10 +437,11 @@
   <?php
     }
   ?>
+  @if (site_flag('home_show_gallery'))
   <section class="gallery-section"> 
   <div class="container">
             <div class="section-header">
-                <h2>Gallery</h2>
+                <h2>{{ site_text('home_title_gallery') }}</h2>
             </div><!-- .section-header -->
             <!-- images row -->
             <div class="row">
@@ -482,7 +475,7 @@
                       <div class="event-items">
                         <div class="event-img">   
                               <div class="item-video">
-                                  <iframe src="<?php echo $value->video_link;?>" title="<?php echo $value->video_title;?>" frameborder="0" allow="accelerometer;clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                  <iframe src="<?php echo e(youtube_embed_url($value->video_link));?>" title="<?php echo $value->video_title;?>" frameborder="0" allow="accelerometer;clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                               </div> 
                           </div> 
                           <div class="events-content">
@@ -501,13 +494,14 @@
             </div><!--row-->
   </div><!--container-->
   </section>
+  @endif
     <!--End testimonials section-->
     <!-- Start Sponsors Section -->
-    <?php if(!empty($stakeholders)) { ?>
+    <?php if(site_flag('home_show_partners') && !empty($stakeholders)) { ?>
     <section class="bg-sponsors-section">
       <div class="container">
         <div class="section-header">
-          <h2>Our Partners</h2>
+          <h2>{{ site_text('home_title_partners') }}</h2>
         </div><!-- .section-header -->
         <div class="row">
           <div class="col-md-12">

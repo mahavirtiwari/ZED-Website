@@ -24,6 +24,19 @@ Laravel 13 (PHP 8.4) version of the ZED website, made up of the public site and 
 
 Field types: text, url, email, number, textarea, editor, date, select, multiselect (ordered), toggle, image and file. Fields can be shown only for some values of another field with `showIf()`.
 
+## What the CMS controls on the website
+
+| Website part | CMS place |
+|---|---|
+| Menus, pages, news, FAQs, sliders, videos, initiatives, benefits, notifications, gallery, partners, testimonials, resources, certified MSMEs, guidance documents, parameters, sectors, disciplines | Their modules |
+| Header logos and links, footer copyright, footer logo, social media links, text after page titles, default page description | Settings › Header and footer |
+| Home page: top heading, text and two buttons, announcement label, the heading of every section, and a show/hide switch for each section | Settings › Home page |
+| About-us text, SEO texts, counters (numbers, labels, show/hide), contact details and working hours | Settings › About us / Home page SEO / Gallery SEO / Counters / Contact details |
+| Special content on a page: embedded web page (below or instead of the content, or full width), FAQ list, certificate verification form, maturity matrix, guidance documents, parameters | Pages › Special content (no longer tied to page addresses in the code) |
+| Captcha switches, Contact Us form type | Settings › Security |
+
+The defaults for every setting are in `config/cms.php`. They are what the site shows until a setting is saved.
+
 ## Security (audit "Verification Report No. I")
 
 | Finding | Where it is handled |

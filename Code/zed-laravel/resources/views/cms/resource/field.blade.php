@@ -28,7 +28,7 @@
 
             @case('select')
                 <select class="form-select{{ $invalid }}" id="{{ $id }}" name="{{ $field->name }}" @if ($field->required) required @endif{!! $describedBy !!}>
-                    @unless ($field->required)<option value="">—</option>@endunless
+                    @unless ($field->required || array_key_exists('', $field->options()))<option value="">—</option>@endunless
                     @foreach ($field->options() as $optionValue => $optionLabel)
                         <option value="{{ $optionValue }}" @selected((string) $value === (string) $optionValue)>{{ $optionLabel }}</option>
                     @endforeach

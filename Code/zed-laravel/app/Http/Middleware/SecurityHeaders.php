@@ -37,7 +37,10 @@ class SecurityHeaders
             'base-uri' => ["'self'"],
             'frame-ancestors' => ["'self'"],
         ];
-        foreach (config('security.csp', []) as $directive => $sources) {
+        $extra = config('security.csp', []);
+        // a page may embed another site (CMS > Pages > Special content): allow just that host
+        $extra['frame-src'] = array_merge($extra['frame-src'] ?? [], (array) $request->attributes->get('csp.frame-src', []));
+        foreach ($extra as $directive => $sources) {
             $directives[$directive] = array_values(array_unique(array_merge($directives[$directive] ?? [], (array) $sources)));
         }
 

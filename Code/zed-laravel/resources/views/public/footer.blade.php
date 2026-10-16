@@ -8,7 +8,7 @@
 						<div class="col-sm-3">
 							<div class="footer-widgets">
 								<div class="widgets-title">
-									<h3>Contact Us</h3>
+									<h3>{{ site_text('footer_contact_heading') }}</h3>
 								</div>
 								<div class="address-box">
 									<ul class="address">
@@ -21,7 +21,7 @@
 										<?php if(isset($counters['zed_email_id']) && !empty($counters['zed_email_id'])){ ?>
 											<li><i class="fa fa-envelope-o" aria-hidden="true"></i><span><?php echo $counters['zed_email_id']; ?></span> </li>
 										<?php } ?>
-										<?php if(isset($counters['label_name_1']) && !empty($counters['label_name_1'])){ ?>
+										<?php if(isset($counters['label_name_2']) && !empty($counters['label_name_2'])){ ?>
 											<li><i class="fa fa-phone" aria-hidden="true"></i><span><b><?php echo $counters['label_name_2']; ?>:<br></b><?php echo $counters['tp_phone_1']; ?><br><?php echo $counters['tp_phone_2']; ?><br><?php echo $counters['tp_phone_3']; ?></span></li>
 										<?php } ?>
 										<?php if(isset($counters['tp_email_id']) && !empty($counters['tp_email_id'])){ ?>
@@ -66,19 +66,20 @@
 					<div class="row">
 						<div class="col-sm-4">
 							<div class="copyright-txt">
-								<p>ZED © 2022 All Rights Reserved | Version- 2.1.1</p>
+								<p>{{ site_text('footer_copyright') }}</p>
 							</div><!-- .copyright-txt -->
 						</div>
 						<div class="col-sm-4 text-center">
-							<a href="http://www.qcin.org/" target="_blank" class="qci-logo-footer"><img src="<?php echo base_url() ?>assets/images/zed-icon.png" alt="QCI"></a>
+							<a href="{{ site_url('footer_logo_url') ?: url('/') }}" target="_blank" rel="noopener" class="qci-logo-footer"><img src="{{ site_image('footer_logo') }}" alt="QCI"></a>
 						</div>
 						<div class="col-sm-4">
 							<div class="social-box">
 								<ul class="social-icon-rounded">
-									<li><a target="_blank" href="https://www.facebook.com/ZED.QCI"><img src="/assets/images/svgicons/fb.svg" alt="facebook"/></a></li>
-									<li><a target="_blank" href="https://twitter.com/ZED_QCI"><img src="/assets/images/svgicons/twitter.svg" alt="twitter"/></a></li>
-									<li><a target="_blank" href="https://www.youtube.com/channel/UCSoN3CodGbQGe7a0t7wZiHQ"><img src="/assets/images/svgicons/youtube.svg" alt="youtube"/></a></a></li>
-									<li><a target="_blank" href="https://www.linkedin.com/in/zed-qci-13b758140/"><img src="/assets/images/svgicons/linkedin.svg" alt="linkedin"/></a></a></li>
+									@foreach (['social_facebook' => ['fb', 'Facebook'], 'social_twitter' => ['twitter', 'X (Twitter)'], 'social_youtube' => ['youtube', 'YouTube'], 'social_linkedin' => ['linkedin', 'LinkedIn']] as $setting => [$icon, $name])
+										@if ($link = site_url($setting))
+											<li><a target="_blank" rel="noopener" href="{{ $link }}"><img src="/assets/images/svgicons/{{ $icon }}.svg" alt="{{ $name }}"/></a></li>
+										@endif
+										@endforeach
 								</ul>
 							</div>
 						</div>

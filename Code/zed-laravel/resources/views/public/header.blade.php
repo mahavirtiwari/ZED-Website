@@ -2,16 +2,15 @@
   <div class="bg-header-top">
     <div class="container"> 
         <div class="header-top"> 
-              <a href="http://msme.gov.in/" target="_blank" class="img-responsive">
-              <img src="<?php echo base_url();?>assets/images/ministry.png" alt="MSME Logo Updated">
-                <!-- <span>Ministry of <strong>Micro, small &amp; Medium Enterprises </strong></span> -->
-              </a> 
-              <a href="/"><img src="<?php echo base_url();?>assets/images/zed-logo.png" alt="ZED Logo" class="img-responsive "></a>
-              
-              <a href="http://www.qcin.org" target="_blank" class="img-responsive" style="display:none;">
-                <!-- <span><strong>Quality Council<br>of India</strong></span> -->
-                <img src="<?php echo base_url() ?>assets/images/qci.png"  alt="QCI Logo">
-              </a>  
+              {{-- logos and links: CMS > Settings > Header and footer --}}
+              <a href="{{ site_url('header_ministry_url') ?: url('/') }}" target="_blank" rel="noopener" class="img-responsive">
+              <img src="{{ site_image('header_ministry_logo') }}" alt="Ministry of Micro, Small and Medium Enterprises">
+              </a>
+              <a href="/"><img src="{{ site_image('header_logo') }}" alt="ZED Logo" class="img-responsive "></a>
+
+              <a href="{{ site_url('header_qci_url') }}" target="_blank" rel="noopener" class="img-responsive" @unless (site_flag('header_show_qci')) style="display:none;" @endunless>
+                <img src="{{ site_image('header_qci_logo') }}"  alt="QCI Logo">
+              </a>
         </div><!-- .header-top --> 
     </div><!-- .container -->
   </div><!-- .bg-header-top -->
