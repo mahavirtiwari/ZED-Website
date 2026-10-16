@@ -15,7 +15,7 @@ return [
      */
     'legacy_hosts' => [
         'zed.msme.gov.in', 'www.zed.msme.gov.in', 'zed.org.in', 'zedv2.umon.in', 'zedv3.umon.in',
-        'zed-admin.retedys.com', 'zed-web2.retedys.com', 'zed-staging.qci.org.in',
+        'zed-admin.retedys.com', 'zed-web2.retedys.com', 'zed-staging.qci.org.in', 'zedcms.umon.in',
     ],
 
     /*
