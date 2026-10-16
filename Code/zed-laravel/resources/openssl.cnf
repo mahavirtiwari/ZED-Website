@@ -1,0 +1,6 @@
+# Minimal OpenSSL config for App\Support\PasswordTransport (RSA key generation).
+# PHP on Windows has no default openssl.cnf.
+[ req ]
+distinguished_name = req_distinguished_name
+
+[ req_distinguished_name ]

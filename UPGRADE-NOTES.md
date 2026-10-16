@@ -69,3 +69,7 @@ Then:
 4. Restrict the Google Maps API key to your domains. The Universal Analytics ID `UA-99946113-1` is retired, so move to GA4 if analytics is still needed.
 5. Check that no `admin@admin.com` (Ion Auth default) account exists.
 6. Security audit fixes (October 2026): run `DATABASE/upgrade_2026_10_security.sql`, apply `deploy/nginx/zed.conf` (nginx) and serve over HTTPS only. See `SECURITY-AUDIT-RESPONSE.md` for the details and the CMS > Security settings.
+
+## Laravel version (October 2026)
+
+`Code/zed-laravel` is the Laravel 13 version of the public site and the CMS (Bootstrap 5.3 CMS, same database and uploads, same public URLs). It runs side by side with this CodeIgniter code until the switch-over. See `Code/zed-laravel/README.md` for local setup, deployment (`deploy/nginx/zed-laravel.conf`) and the switch-over steps.

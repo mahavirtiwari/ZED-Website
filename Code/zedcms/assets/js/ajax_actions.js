@@ -46,7 +46,8 @@ function return_ajax_response(url,data,serverProcessing)
                         // END PARSING RESPONSE HEADER
                         // -----------------------------
                         if(debug_enable) console.log(response);
-                        dta = $.parseJSON(response);    // Parse JSON Formatted response
+                        // the Laravel site sends application/json (already parsed by jQuery), the old site plain text
+                        dta = (typeof response === 'string') ? JSON.parse(response) : response;
 
                         if(ci_csrf_enabled)             // If CI CSRF Protection is enabled update Global token value
                         {
