@@ -202,7 +202,48 @@ if(!function_exists('global_datetime')){
 				return $CI->input->post('existed_file');
 
 			}
-				
+
+		}
+	}
+	/**
+	* Trumbowyg image upload (pages, news and faq "tbwimage" endpoints)
+	* Saves the posted 'tbwimagefield' into uploads/ and sets the JSON reply the
+	* editor expects. These URIs are excluded from the CSRF token check, so only
+	* same-site AJAX requests are accepted: a cross-site form cannot send the
+	* X-Requested-With header that jQuery adds.
+	**/
+	if(! function_exists('editor_image_upload'))
+	{
+		function editor_image_upload()
+		{
+			$CI=& get_instance();
+			$CI->output->set_content_type('application/json');
+			if( ! $CI->input->is_ajax_request())
+			{
+				$CI->output->set_status_header(403)->set_output(json_encode(array('success'=>FALSE,'message'=>'Forbidden')));
+				return;
+			}
+			$config['upload_path'] = EDITOR_PATH;
+			$config['allowed_types'] = 'gif|jpg|jpeg|png';
+			$config['overwrite']=FALSE;
+			$config['encrypt_name']=TRUE;
+			$config['file_ext_tolower']=TRUE;
+			$CI->load->library('upload', $config);
+			$CI->upload->initialize($config);
+			if( ! $CI->upload->do_upload('tbwimagefield'))
+			{
+				// Trumbowyg reads "success" and shows its upload error message
+				$CI->output->set_output(json_encode(array('success'=>FALSE,'message'=>strip_tags($CI->upload->display_errors()))));
+				return;
+			}
+			$image_details=$CI->upload->data();
+			$data['success']=true;
+			$data['status']=200;
+			$data['data']['link']=URL_FOLDER."uploads/".trim(sanitize_filename($image_details['file_name']));
+			$data['data']['id']=getToken(6);
+			$data['data']['description']='';
+			$data['data']['datetime']=global_datetime();
+			$CI->output->set_output(json_encode($data));
 		}
 	}
 /**

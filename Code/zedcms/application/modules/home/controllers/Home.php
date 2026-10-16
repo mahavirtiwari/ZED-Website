@@ -68,8 +68,6 @@ class Home extends MY_Controller
 			$details[$row['label']] = $row['value'];
 		}
 		$this->data['home_seo'] = $details;
-		// news blocks here
-		$this->data['news_block']=$this->home_model->get_news_post();
 		// Get latest news two 
 		$this->data['news']=$this->home_model->home_news();
 		// Get breaking news

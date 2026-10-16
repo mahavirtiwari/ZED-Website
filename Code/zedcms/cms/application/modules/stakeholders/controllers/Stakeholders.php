@@ -48,6 +48,8 @@ class Stakeholders extends MY_Controller
 
 		}
 
+		// nothing selected or nothing changed: back to the list, not a blank page
+		redirect(base_url().'stakeholders');
 	}
 
 	public function addedit($id='')

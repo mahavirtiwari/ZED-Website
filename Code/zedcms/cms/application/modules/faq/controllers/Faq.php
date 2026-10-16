@@ -51,6 +51,8 @@ class Faq extends MY_Controller
 
 		}
 
+		// nothing selected or nothing changed: back to the list, not a blank page
+		redirect(base_url().'faq');
 	}
 	/**
 	 * Duplicate check for faq
@@ -140,29 +142,7 @@ class Faq extends MY_Controller
 	*/
 		public function tbwimage()
 		{
-			$config['upload_path'] = EDITOR_PATH;
-			$config['allowed_types'] = 'gif|jpg|jpeg|png';
-			$config['overwrite']=FALSE;
-			$config['encrypt_name']=TRUE;
-			$config['file_ext_tolower']=TRUE;
-			$this->load->library('upload', $config);
-			$this->upload->initialize($config);
-			if($this->upload->do_upload('tbwimagefield'))
-			{
-				$image_details=$this->upload->data();
-				$imageID=getToken(6);
-				$imageDescription='';
-				$imageDateTime=global_datetime();
-				$imageLink=URL_FOLDER."uploads/".trim(sanitize_filename($image_details['file_name']));
-				$data['success']=true;
-				$data['status']=200;
-				$data['data']['link']=$imageLink;
-				$data['data']['id']=$imageID;
-				$data['data']['description']=$imageDescription;
-				$data['data']['datetime']=$imageDateTime;
-				echo json_encode($data);
-				//echo '{"data":{"id":"'.$imageID.'","description":"'.$imageDescription.'","datetime":"'.$imageDateTime.'","link":"'.$imageLink.'"},"success":true,"status":200}';
-			}
+			editor_image_upload();
 		}
 
 	}

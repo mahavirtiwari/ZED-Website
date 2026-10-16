@@ -23,7 +23,7 @@
         <div class="row">
             <div class="contact-us">
                 <div class="row">
-                    <?php if($this->session->flashdata()){ ?>
+                    <?php if($this->session->flashdata('message')){ ?>
                     <div class="alert alert-success"><?php echo $this->session->flashdata('message');?></div>
                     <?php }?>
 

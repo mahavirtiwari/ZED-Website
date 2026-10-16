@@ -27,7 +27,7 @@ class Menu extends MY_Controller
         GROUP_CONCAT(B.page_name) AS page_name
      FROM zed_menu A
      LEFT JOIN zed_pages B ON FIND_IN_SET(B.id, A.menu_related_pages)
-     WHERE A.status != 2 AND (A.menu_type = 3 OR A.menu_type = 2)
+     WHERE A.status != 2
      GROUP BY 
         A.menu_name,
         A.menu_external_link,
@@ -70,6 +70,8 @@ class Menu extends MY_Controller
 
 		}
 
+		// nothing selected or nothing changed: back to the list, not a blank page
+		redirect(base_url().'menu');
 	}
 	/**
 	 * Duplicate check for Menu

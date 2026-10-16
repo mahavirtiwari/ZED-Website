@@ -96,5 +96,7 @@ class Media extends MY_Controller
 
 		}
 
+		// nothing selected or nothing changed: back to the list, not a blank page
+		redirect(base_url().'media');
 	}
 }

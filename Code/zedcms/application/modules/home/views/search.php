@@ -19,11 +19,16 @@
 					<?php }?>
 					<!-- no results found block  -->
 					<?php if(isset($details)) {
-						foreach ($details as $key => $value) { ?>
+						foreach ($details as $key => $value) {
+							// plain-text excerpt: cutting the editor HTML could leave unclosed tags in the page
+							$excerpt = trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $value->page_description), ENT_QUOTES, 'UTF-8')));
+							$cut = mb_strlen($excerpt, 'UTF-8') > 500;
+							$excerpt = $cut ? mb_substr($excerpt, 0, 500, 'UTF-8').'...' : $excerpt;
+					?>
 					<div class="card search-card ">
-						<div class="card-header"><h4><?php echo $value->page_name;?></h4></div>
-						<div class="card-body"><p><?php echo substr(preg_replace("/<img[^>]+\>/i", "", $value->page_description),0,1000); ?>...</p></div> 
-					</div> 
+						<div class="card-header"><h4><a href="<?php echo base_url().html_escape(strtolower((string) $value->page_slug));?>"><?php echo html_escape($value->page_name);?></a></h4></div>
+						<div class="card-body"><p><?php echo html_escape($excerpt); ?></p></div>
+					</div>
 					<?php }?>
 					<?php } ?>
 				 </div>

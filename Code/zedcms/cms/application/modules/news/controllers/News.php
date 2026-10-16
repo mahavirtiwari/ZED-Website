@@ -50,6 +50,8 @@ class News extends MY_Controller
 
 		}
 
+		// nothing selected or nothing changed: back to the list, not a blank page
+		redirect(base_url().'news');
 	}
 	/**
 	 * Duplicate check for Post
@@ -176,8 +178,8 @@ class News extends MY_Controller
         	//$data=xss_clean($data);
         	if(!empty($data['post_slug']))
         	{
-        		// check_slug() returns an empty array when no Page uses this slug
-        		$check_news_pages_slug=$this->posts_model->check_slug($data['post_slug']);
+        		// check_slug() returns an empty array when no other Page or News uses this slug
+        		$check_news_pages_slug=$this->posts_model->check_slug($data['post_slug'], $new ? 0 : $id);
         		if(empty($check_news_pages_slug))
         		{
         			if($new)
@@ -202,7 +204,8 @@ class News extends MY_Controller
         		}
         		else
         		{
-        			$this->session->set_flashdata('message1', 'URL already exists in Pages added, please change the News Name');
+        			// the form is shown again in this request, so no flashdata (it would also show on the next page)
+        			$this->data['message1']='This URL is already used by another Page or News item, please change the News Name';
 
         		}
         	}
@@ -217,39 +220,11 @@ class News extends MY_Controller
         $this->_render_page(get_template(),$this->data);
     }
 	/**
-	 * Duplicate check for category
-	 *
-	 * 
-	 * @return	image link url
-	 */	
+	 * Image upload from the Trumbowyg editor
+	 */
 	public function tbwimage()
 	{
-		$config['upload_path'] = EDITOR_PATH;
-		$config['allowed_types'] = 'gif|jpg|jpeg|png';
-		$config['overwrite']=FALSE;
-		$config['encrypt_name']=TRUE;
-		$config['file_ext_tolower']=TRUE;
-		$this->load->library('upload', $config);
-			// Alternately you can set preferences by calling the ``initialize()`` method. Useful if you auto-load the class:
-		$this->upload->initialize($config);
-		if($this->upload->do_upload('tbwimagefield'))
-		{
-			$image_details=$this->upload->data();
-		//var_dump($_FILES['tbwimagefield']['name']);
-		//echo '{"tbwresponse":"http://localhost/zed-cms/uploads/image.jpg"}';
-			$imageID=getToken(6);
-			$imageDescription='';
-			$imageDateTime=global_datetime();
-			$imageLink=URL_FOLDER."uploads/".trim(sanitize_filename($image_details['file_name']));
-			$data['success']=true;
-			$data['status']=200;
-			$data['data']['link']=$imageLink;
-			$data['data']['id']=$imageID;
-			$data['data']['description']=$imageDescription;
-			$data['data']['datetime']=$imageDateTime;
-			echo json_encode($data);
-			//echo '{"data":{"id":"'.$imageID.'","description":"'.$imageDescription.'","datetime":"'.$imageDateTime.'","link":"'.$imageLink.'"},"success":true,"status":200}';
-		}
+		editor_image_upload();
 	}
 	/*==========news block================*/
 	public function news_block()

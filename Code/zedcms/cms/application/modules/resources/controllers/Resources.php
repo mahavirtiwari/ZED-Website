@@ -47,6 +47,8 @@ class Resources extends MY_Controller
 
 		}
 
+		// nothing selected or nothing changed: back to the list, not a blank page
+		redirect(base_url().'resources');
 	}
 	public function addedit($id='')
 	{

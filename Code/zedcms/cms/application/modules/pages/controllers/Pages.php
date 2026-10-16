@@ -48,6 +48,8 @@ class Pages extends MY_Controller
 
 		}
 
+		// nothing selected or nothing changed: back to the list, not a blank page
+		redirect(base_url().'pages');
 	}
 	/**
 	 * Duplicate check for Page
@@ -117,8 +119,8 @@ class Pages extends MY_Controller
 	   		//$data=xss_clean($data);
 	   		if(!empty($data['page_slug']))
 	   		{
-	   			// check_slug() returns an empty array when no News uses this slug
-	   			$check_news_pages_slug=$this->pages_model->check_slug($data['page_slug']);
+	   			// check_slug() returns an empty array when no News or other Page uses this slug
+	   			$check_news_pages_slug=$this->pages_model->check_slug($data['page_slug'], $new ? 0 : $id);
 	   			if(empty($check_news_pages_slug))
 	   			{
 	   				if($new)
@@ -142,7 +144,8 @@ class Pages extends MY_Controller
 	   			}
 	   			else
 	   			{
-	   				$this->session->set_flashdata('message1', 'URL already exists in News added, please change the Page Name');
+	   				// the form is shown again in this request, so no flashdata (it would also show on the next page)
+	   				$this->data['message1']='This URL is already used by a News item or another Page, please change the Page Name';
 
 	   			}
 	   		}
@@ -164,30 +167,6 @@ class Pages extends MY_Controller
 	*/
 		public function tbwimage()
 		{
-			$config['upload_path'] = EDITOR_PATH;
-			$config['allowed_types'] = 'gif|jpg|jpeg|png';
-			$config['overwrite']=FALSE;
-			$config['encrypt_name']=TRUE;
-			$config['file_ext_tolower']=TRUE;
-			$this->load->library('upload', $config);
-			$this->upload->initialize($config);
-			if($this->upload->do_upload('tbwimagefield'))
-			{
-				$image_details=$this->upload->data();
-		//var_dump($_FILES['tbwimagefield']['name']);
-		//echo '{"tbwresponse":"http://localhost/zed-cms/uploads/image.jpg"}';
-				$imageID=getToken(6);
-				$imageDescription='';
-				$imageDateTime=global_datetime();
-				$imageLink=URL_FOLDER."uploads/".trim(sanitize_filename($image_details['file_name']));
-				$data['success']=true;
-				$data['status']=200;
-				$data['data']['link']=$imageLink;
-				$data['data']['id']=$imageID;
-				$data['data']['description']=$imageDescription;
-				$data['data']['datetime']=$imageDateTime;
-				echo json_encode($data);
-				//echo '{"data":{"id":"'.$imageID.'","description":"'.$imageDescription.'","datetime":"'.$imageDateTime.'","link":"'.$imageLink.'"},"success":true,"status":200}';
-			}
+			editor_image_upload();
 		}
 	}

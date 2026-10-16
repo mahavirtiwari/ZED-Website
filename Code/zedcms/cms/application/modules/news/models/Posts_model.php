@@ -39,9 +39,18 @@ Class Posts_model extends CI_Model
 		$query = $this->db->get();
 		return $query->result_array();
 	}
-	public function check_slug($slug)
+	/**
+	 * Slugs share one URL space (site root): a news slug may not be used by any
+	 * page, or by another news item, that is not deleted.
+	 * @return array  empty when the slug is free
+	 */
+	public function check_slug($slug, $id=0)
 	{
-		return $this->db->select("page_slug")->where(array('status'=>1,'page_slug'=>$slug))->limit(1)->get(TBL_PAGES)->result_array();
-		
+		$used = $this->db->select("page_slug")->where(array('status!='=>2,'page_slug'=>$slug))->limit(1)->get(TBL_PAGES)->result_array();
+		if(empty($used))
+		{
+			$used = $this->db->select("post_slug")->where(array('status!='=>2,'post_slug'=>$slug,'id!='=>(int)$id))->limit(1)->get(TBL_POSTS)->result_array();
+		}
+		return $used;
 	}
 }

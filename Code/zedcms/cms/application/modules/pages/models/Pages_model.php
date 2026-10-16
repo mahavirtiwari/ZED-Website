@@ -43,10 +43,18 @@ Class Pages_model extends CI_Model
 	{
 		return $this->db->select('id,menu_name')->where('status',1)->order_by('menu_order')->get(TBL_MENU)->result();
 	}
-	public function check_slug($slug)
+	/**
+	 * Slugs share one URL space (site root): a page slug may not be used by any
+	 * news item, or by another page, that is not deleted.
+	 * @return array  empty when the slug is free
+	 */
+	public function check_slug($slug, $id=0)
 	{
-		
-		return $this->db->select("post_slug")->where(array('status'=>1,'post_slug'=>$slug))->limit(1)->get(TBL_POSTS)->result_array();
-	
+		$used = $this->db->select("post_slug")->where(array('status!='=>2,'post_slug'=>$slug))->limit(1)->get(TBL_POSTS)->result_array();
+		if(empty($used))
+		{
+			$used = $this->db->select("page_slug")->where(array('status!='=>2,'page_slug'=>$slug,'id!='=>(int)$id))->limit(1)->get(TBL_PAGES)->result_array();
+		}
+		return $used;
 	}
 }

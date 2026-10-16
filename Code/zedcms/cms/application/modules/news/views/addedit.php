@@ -24,8 +24,9 @@
 			</div>
 			<div class="zed-tabs">
 				<?php
-				if($this->session->flashdata('message1')){ ?>
-				<div class="alert alert-danger"><?php echo $this->session->flashdata('message1');?></div>
+				$error_message = isset($message1) ? $message1 : $this->session->flashdata('message1');
+				if($error_message){ ?>
+				<div class="alert alert-danger"><?php echo html_escape($error_message);?></div>
 				<?php  } ?>
 				<!-- External Link Tab -->
 				<div class="tab-content" id="external_link">

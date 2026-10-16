@@ -58,7 +58,9 @@ require_once( BASEPATH .'database/DB'. EXT );
 
 $db =& DB();
 // route keys are regular expressions, so slugs are quoted
-$query = $db->select('page_slug')->get(TBL_PAGES);
+// only active rows: Home::page and Home::posts 404 on anything else, and a deleted
+// post must not take over the URL of an active page with the same slug
+$query = $db->select('page_slug')->where('status', 1)->get(TBL_PAGES);
 $result = $query->result();
 foreach( $result as $row )
 {
@@ -68,7 +70,7 @@ foreach( $result as $row )
 }
 
 // routing for latest news
-$query = $db->select('post_slug')->get(TBL_POSTS);
+$query = $db->select('post_slug')->where('status', 1)->get(TBL_POSTS);
 $result = $query->result();
 foreach( $result as $row )
 {

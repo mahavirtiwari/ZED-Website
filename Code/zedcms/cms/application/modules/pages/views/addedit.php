@@ -8,8 +8,9 @@
 				</ul>
 				<?php 
 
-				if($this->session->flashdata('message1')){ ?>
-				<div class="alert alert-danger"><?php echo $this->session->flashdata('message1');?></div>
+				$error_message = isset($message1) ? $message1 : $this->session->flashdata('message1');
+				if($error_message){ ?>
+				<div class="alert alert-danger"><?php echo html_escape($error_message);?></div>
 				<?php  } ?>
 				<?php 	
 				echo validation_errors('<div class="alert alert-danger fade in"><a href="#" class="close" data-dismiss="alert">&times;</a>','</div>');
