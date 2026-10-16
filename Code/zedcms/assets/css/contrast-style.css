@@ -1,0 +1,46 @@
+:root {
+    --black: #232527;
+    --white: #ffffff; 
+    --borderclr: #f7f7f7;
+    --textClr: #00ff00;
+    --grey: #222222;
+    --btnClr:#45a5ad;
+  }
+
+ body,  
+ .header-style-1 .bg-main-menu,.bg-search-header,
+.first-component,.gallery-section,.testimonials-section,.testimonials-section .item,.btn-default,
+.bg-upcoming-events,.count-items,.zed-4-step-process,.bg-about-greenforest,.bg-footer-bottom,.sub-menu,
+.sub-sub-menu,.bg-single-services,.incentive-page,
+.single-left-services-list .nav-tabs>li.active>a, .single-left-services-list .nav-tabs>li.active>a:focus, .single-left-services-list .nav-tabs>li.active>a:hover,
+.single-left-services-list .nav-tabs>li>a,
+.bg-page-header,.services-content,.incentive-page html{
+    background-color: var(--black); 
+    background: var(--black);
+    box-shadow: none
+} 
+h1, h2, h3, h4, h5, h6, p , a, b, strong , span, li, small
+ {
+    color:var(--textClr) !important;
+} 
+.header-style-1 .main-menu .sub-menu li a, .header-style-2 .main-menu .sub-menu li a, .header-style-3 .main-menu .sub-menu li a, .sub-sub-menu li a{
+    color:var(--black) !important;
+}
+.sopnsors-items a{
+    box-shadow: none
+}
+.header-style-1 .bg-main-menu .navbar,.bg-footer-top,.bg-page-header .page-header{
+    border: 1px solid transparent;
+    background:var(--grey);
+}
+input[type="text"], input[type="email"], input[type="url"], input[type="password"], input[type="search"], input[type="tel"], input[type="number"], textarea {
+ 
+    color:  var(--white)  !important;; 
+}
+.accesbility-tab{ 
+    border: 1px solid var(--white);
+    background-color: var(--black);
+}
+.accesbility-tab ul li:not(:last-child) {
+    border-bottom: 1px solid var(--white) ;
+}

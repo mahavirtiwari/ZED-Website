@@ -1,0 +1,3 @@
+CMS URL:  http://127.0.0.1:8080/cms/
+Email:    localadmin@zed.test
+Password: 48373166ef807bc2

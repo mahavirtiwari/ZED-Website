@@ -1,0 +1,108 @@
+/**
+ * GLOBAL OVERRIDES START
+ */
+ body {
+ 	background-color: #329478; /* fallback for old browsers */
+ 	background-image: url(../img/mii_bg.png);
+ 	background-repeat: no-repeat;
+ 	background-position: center center;
+ 	background-size: cover;
+ 	font-family: "Roboto", sans-serif;
+ 	-webkit-font-smoothing: antialiased;
+ 	-moz-osx-font-smoothing: grayscale;
+ 	width: 100vw;
+ 	height: 100vh;
+ 	display: table;
+ }
+ .btn{
+ 	line-height: 42px;
+ 	padding-top: 0;
+ 	padding-bottom: 0;
+ 	height: 42px;
+ }
+ .form-control{
+ 	padding-top: 0;
+ 	padding-bottom: 0;
+ 	line-height: 42px;
+ 	height: 42px;
+ 	box-shadow: none !important;
+ }
+ .form-control:focus{
+ 	border-color: #329478;
+ }
+
+/**
+ * LOGIN BOX
+ */
+ .zed-login-container{
+ 	display: table-cell;
+ 	width: 100%;
+ 	height: 100%;
+ 	vertical-align: middle;
+ 	text-align: center;
+ }
+ .zed-login-box{
+ 	display: inline-block;
+ 	width: 90%;
+ 	max-width: 800px;
+ 	overflow: hidden;
+ 	background-color: #ffffff;
+ 	box-shadow: 2px 6px 12px 0px rgba(0,0,0,0.14);
+ 	border-radius: 8px;
+ }
+ .zed-login-content{
+ 	display: table;
+ 	width: 100%;
+ 	table-layout: fixed;
+ }
+ .zed-login-content > div{
+ 	display: table-cell;
+ 	vertical-align: middle;
+ 	position: relative;
+ }
+ .zed-login-right{
+ 	text-align: center;
+ 	padding: 10em 3em;
+ 	background-color: #F7F8F9;
+ }
+ .zed-login-logo{
+ 	height: 64px;
+ }
+
+ /**
+  * FORM CONTROL OVERRIDES
+  */
+ .zed-login-container .form-control{
+ 	padding: 0 18px;
+ 	line-height: 42px;
+ 	height: auto;
+ }
+ .zed-login-quote{
+ 	position: absolute;
+ 	bottom: 0;
+ 	left: 0;
+ 	width: 100%;
+ 	border-top: 1px #dee1e4 solid;
+ 	line-height: 64px;
+ 	font-size: 16px;
+ }
+
+
+ /**
+  * MOBILE OVERRIDES
+  */
+ @media only screen and (max-width: 768px){
+ 	.zed-login-content {
+ 		display: block;
+ 	}
+ 	.zed-login-content > div{
+ 		display: block;
+ 	}
+ 	.zed-login-right,
+ 	.zed-login-left{
+ 		padding: 5em 3em;
+ 	}
+ 	.zed-login-quote{
+ 		display: none;
+ 	}
+ }

@@ -1,0 +1,25 @@
+.rtd-asky{
+	background-color: #ffffff;
+	padding: 20px;
+	border-radius: 4px;
+	text-align: center;
+}
+.rtd-asky-question{
+	font-size: 16px;
+	line-height: 24px;
+	margin: 15px 0;
+}
+.rtd-asky-btns > a + a {
+	margin-left: 20px;
+}
+/*.rtd-asky-btns > a{
+	text-align: center;
+	background-color: #3d4d5d;
+	color: #ffffff;
+	border-radius: 4px;
+	display: inline-block;
+	padding: 10px 20px;
+}
+.rtd-asky-btns > a:only-child {
+	display: block;
+}*/

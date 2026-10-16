@@ -1,0 +1,14 @@
+# Public site front controller (the CMS has its own rules in cms/.htaccess)
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+
+# Never serve dotfiles, the old nginx placeholder or dumps
+<FilesMatch "(^\.|\.(sql|log|md|rst)$|^index\.nginx-debian\.html$|^composer.*\.(json|lock|php)$)">
+	Require all denied
+</FilesMatch>

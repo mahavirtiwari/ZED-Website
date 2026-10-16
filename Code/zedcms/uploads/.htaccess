@@ -1,0 +1,8 @@
+# User-uploaded files: never execute scripts from here
+<FilesMatch "\.(php[0-9]?|phtml|phar|pl|py|cgi|sh|shtml)$">
+	Require all denied
+</FilesMatch>
+<IfModule mod_php.c>
+	php_flag engine off
+</IfModule>
+Options -Indexes -ExecCGI
