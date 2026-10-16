@@ -1,0 +1,25 @@
+# ZED website - nginx server block, HTTP only (before the free SSL certificate).
+# Written by deploy.sh from deploy/linux/nginx-http.conf.template; do not edit
+# on the server (the next deployment overwrites it). enable-https.sh switches
+# to nginx-https.conf.template once the Let's Encrypt certificate exists.
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name __HOST__;
+
+    root  __ROOT__/current/public;
+    index index.php;
+    charset utf-8;
+    server_tokens off;
+    autoindex off;
+    client_max_body_size 32m;
+
+    access_log /var/log/nginx/zedcms.access.log;
+    error_log  /var/log/nginx/zedcms.error.log warn;
+
+    # Let's Encrypt checks (free SSL certificate and its automatic renewals)
+    location ^~ /.well-known/acme-challenge/ { root __ACME__; default_type text/plain; }
+
+    include __ROOT__/shared/nginx-app.conf;
+}

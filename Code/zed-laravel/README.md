@@ -79,9 +79,9 @@ The site is then at http://127.0.0.1:8090 and the CMS at http://127.0.0.1:8090/c
 5. Make `storage/` and `bootstrap/cache/` writable by PHP-FPM. Enable opcache.
 6. Use `deploy/nginx/zed-laravel.conf`, over HTTPS only.
 
-## Deploy (Windows Server, IIS)
+## Staging (zedcms.umon.in, Ubuntu)
 
-The staging site (zedcms.umon.in) runs on Windows Server with IIS, PHP 8.4 (FastCGI) and MySQL 8.4. PowerShell scripts in `deploy/windows` install everything and deploy each release; `public/web.config` holds the IIS rules. See `deploy/windows/README.md` and the step-by-step guide `deploy/windows/ZED-Staging-Deployment-Guide.docx`.
+The staging site runs on Ubuntu (nginx, PHP 8.4-FPM, MySQL, free Let's Encrypt certificate). From a Windows PC, `deploy/windows/Get-ZedCode.ps1` builds a release package and `deploy/windows/Publish-ZedRelease.ps1` uploads it over SSH and runs the server scripts in `deploy/linux`. See `deploy/windows/README.md` and the step-by-step guide `deploy/windows/ZED-Staging-Deployment-Guide.docx`.
 
 To create a CMS superadmin, or reset that user's password, on any server: `php artisan zed:cms-admin someone@example.com`.
 

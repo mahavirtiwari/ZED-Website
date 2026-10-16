@@ -1,0 +1,6 @@
+# Server scripts and templates must keep Unix line endings, also when the
+# repository is checked out on Windows (bash fails on CRLF).
+*.sh        text eol=lf
+*.template  text eol=lf
+deploy/linux/**  text eol=lf
+deploy/nginx/**  text eol=lf

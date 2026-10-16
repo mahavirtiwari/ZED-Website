@@ -1,0 +1,41 @@
+# ZED website - rules shared by the http and https server blocks.
+# Written by deploy.sh to __ROOT__/shared/nginx-app.conf.
+
+# security headers for files nginx serves itself (Laravel sends its own, with the CSP)
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header X-XSS-Protection "1; mode=block" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+location ~ /\.(?!well-known/) { return 404; }                         # dot-files (.env, .git ...)
+location ~* \.(sql|log|md|bak|old|orig|swp|dist|cnf|ini|env|sh|config)$ { return 404; }
+
+# uploaded files: never run scripts
+location ~* ^/(uploads|photogallery|slider|assets)/.*\.(php\d?|phtml|phar|pl|py|cgi|sh|shtml)$ { return 404; }
+
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+# only the front controller runs PHP
+location = /index.php {
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+    fastcgi_param DOCUMENT_ROOT $realpath_root;
+    fastcgi_param HTTPS $https if_not_empty;
+    fastcgi_hide_header X-Powered-By;
+    fastcgi_read_timeout 120s;
+    fastcgi_pass unix:__SOCK__;
+    # Laravel sends the security headers for pages; an add_header here (empty,
+    # so nothing is sent) stops nginx from adding its own copies above.
+    add_header X-Zed-None "" always;
+}
+location ~ \.php$ { return 404; }
+
+# static files; anything missing goes to Laravel (e.g. the captcha image /captcha/login.png)
+location ~* \.(css|js|png|jpe?g|gif|svg|webp|ico|woff2?|ttf|eot|pdf)$ {
+    expires 30d;
+    add_header Cache-Control "public";
+    add_header X-Content-Type-Options "nosniff" always;
+    try_files $uri /index.php?$query_string;
+}

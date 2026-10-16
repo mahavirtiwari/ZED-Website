@@ -1,26 +1,34 @@
-# Deploying the ZED website to a Windows server (IIS)
+# Deploying the ZED website to the Ubuntu staging server
 
 Step-by-step guide: `ZED-Staging-Deployment-Guide.docx` in this folder.
-Staging: http(s)://zedcms.umon.in (Windows Server on Azure, IIS + PHP 8.4 + MySQL 8.4).
+Staging: zedcms.umon.in on Ubuntu (AWS, 13.232.227.197): nginx + PHP 8.4-FPM + MySQL,
+free Let's Encrypt SSL certificate (certbot, renewed automatically).
+
+Everything is started from your Windows PC with PowerShell; the scripts in
+`deploy/linux` do the work on the server over SSH.
 
 | Script | Where | When |
 | --- | --- | --- |
-| `Get-ZedCode.ps1` | your PC | every release: gets the code from GitHub and builds `ZED-release-*.zip` |
-| `Export-ZedMedia.ps1` | where the uploaded files are | when needed: packs `uploads`, `slider`, `photogallery` into `ZED-media-*.zip` |
-| `Install-ZedServer.ps1` | server, as administrator | once: IIS, URL Rewrite, VC++ runtime, PHP 8.4, Composer, MySQL 8.4 |
-| `Initialize-ZedDatabase.ps1` | server, as administrator | once: database, its user, import, connection settings |
-| `Deploy-ZedSite.ps1` | server, as administrator | every release (and `-Rollback`) |
-| `Enable-ZedHttps.ps1` | server, as administrator | once: Let's Encrypt certificate and HTTPS everywhere |
-| `ZedCommon.ps1` | (used by the others) | |
+| `Get-ZedCode.ps1` | your PC | every release: gets the code from GitHub, builds `ZED-release-*.zip` |
+| `Publish-ZedRelease.ps1` | your PC | every release: uploads the zip and installs it (`-Setup` the first time, `-Rollback`, `-CertificateStatus`) |
+| `Export-ZedMedia.ps1` | your PC | when needed: packs `uploads`, `slider`, `photogallery` into `ZED-media-*.zip` |
+| `../linux/install-server.sh` | server (run by Publish) | once: nginx, PHP 8.4-FPM pool, Composer, MySQL, certbot |
+| `../linux/init-database.sh` | server (run by Publish) | once: database, its user, import, connection settings |
+| `../linux/deploy.sh` | server (run by Publish) | every release; `--rollback` |
+| `../linux/enable-https.sh` | server (run by Publish) | once: free SSL certificate; `--status` |
+
+The server already hosts other websites: the scripts only add the ZED site
+(own nginx server block, own PHP-FPM pool and Linux user `zedcms`) and do not
+change other sites or the firewall.
 
 Layout on the server:
 
 ```
-C:\inetpub\zedcms\
-  current\            -> link to the live release (IIS site path: current\public)
-  releases\<date>\    the last 3 releases
-  shared\.env         settings (database, APP_KEY, mail ...)
-  shared\storage\     logs, sessions, cache
-  shared\media\       uploads, slider, photogallery (files added through the CMS)
-C:\PHP\  C:\MySQL\  C:\ZED-setup\ (downloads, logs)
+/var/www/zedcms/current        -> releases/<date-time>   (nginx root: current/public)
+/var/www/zedcms/releases/      the last 3 releases
+/var/www/zedcms/shared/.env    settings (database, APP_KEY, mail ...)
+/var/www/zedcms/shared/storage logs, sessions, cache
+/var/www/zedcms/shared/media   uploads, slider, photogallery
+/etc/nginx/sites-available/zedcms.conf, /etc/php/8.4/fpm/pool.d/zedcms.conf
+/var/log/zed-deploy/           script logs
 ```

@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
     STEP 1 - on your PC (the Dell). Downloads or updates the ZED code from GitHub
-    and builds the release package (a .zip) to copy to the staging server.
+    and builds the release package (a .zip) for the Ubuntu staging server.
 
 .DESCRIPTION
     - Clones https://github.com/mahavirtiwari/ZED-Website.git the first time,
@@ -11,8 +11,9 @@
         app\       the Laravel website + CMS (Code\zed-laravel, without vendor\)
         assets\    the website theme files (Code\zedcms\assets)
         database\  zedcms.sql and the upgrade scripts
-        scripts\   these deployment scripts
+        server\    the Ubuntu server scripts (deploy/linux)
     No PHP is needed on this PC; the server installs the PHP libraries itself.
+    Then run Publish-ZedRelease.ps1 to upload and install it on the server.
 
     First time on a new PC:
         git clone https://github.com/mahavirtiwari/ZED-Website.git C:\ZED\ZED-Website
@@ -108,14 +109,16 @@ Get-ChildItem -Path (Join-Path $stage 'app\bootstrap\cache') -Filter *.php -Erro
 
 Copy-Tree (Join-Path $repo 'Code\zedcms\assets') (Join-Path $stage 'assets') -ExcludeFiles @('*.php')
 Copy-Tree (Join-Path $repo 'DATABASE') (Join-Path $stage 'database')
-Copy-Tree (Join-Path $repo 'deploy\windows') (Join-Path $stage 'scripts')
+Copy-Tree (Join-Path $repo 'deploy\linux') (Join-Path $stage 'server')
+# bash needs Unix line endings, whatever Git did on this PC
+Get-ChildItem -Path (Join-Path $stage 'server') -File | ForEach-Object { ConvertTo-UnixFile $_.FullName }
 
 @"
 ZED website release package
 Built:  $(Get-Date -Format 'yyyy-MM-dd HH:mm')
 Commit: $commitText
 Source: $RepoUrl ($Branch)
-"@ | Set-Content -Encoding UTF8 (Join-Path $stage 'RELEASE.txt')
+"@ | ForEach-Object { [IO.File]::WriteAllText((Join-Path $stage 'RELEASE.txt'), $_.Replace("`r`n", "`n") + "`n", (New-Object Text.UTF8Encoding $false)) }
 
 $imageCount = (Get-ChildItem -Path (Join-Path $stage 'assets\images') -Recurse -File -Include *.png, *.jpg, *.jpeg, *.svg -ErrorAction SilentlyContinue).Count
 if ($imageCount -lt 50) {
@@ -130,5 +133,4 @@ Remove-Item -Recurse -Force $stage
 $sizeMb = [math]::Round((Get-Item $zip).Length / 1MB, 1)
 Write-Host ''
 Write-Host "Package ready: $zip ($sizeMb MB)" -ForegroundColor Green
-Write-Host 'Next: copy this zip to the staging server (for example C:\ZED-setup\) and run'
-Write-Host '      scripts\Deploy-ZedSite.ps1 there (see the deployment guide).'
+Write-Host 'Next: Publish-ZedRelease.ps1 (uploads it to the server and installs it; see the deployment guide).'
