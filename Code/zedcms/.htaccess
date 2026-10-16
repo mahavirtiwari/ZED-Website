@@ -1,14 +1,32 @@
 # Public site front controller (the CMS has its own rules in cms/.htaccess)
+# Needs "AllowOverride All" for this folder in the Apache vhost. On nginx these
+# rules do nothing: use deploy/nginx/zed.conf instead.
 Options -Indexes
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On
+
+	# Framework code, libraries and hidden files: answer 404, as if absent
+	# (audit finding "Sensitive File Disclosure")
+	RewriteRule ^(cms/)?(application|system)(/|$) - [R=404,L,NC]
+	RewriteRule ^phpmailer(/|$) - [R=404,L,NC]
+	RewriteRule (^|/)\.(?!well-known/) - [R=404,L]
+
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^(.*)$ index.php/$1 [L]
 </IfModule>
 
-# Never serve dotfiles, the old nginx placeholder or dumps
-<FilesMatch "(^\.|\.(sql|log|md|rst)$|^index\.nginx-debian\.html$|^composer.*\.(json|lock|php)$)">
+# Never serve dotfiles (.htaccess, .DS_Store, .git...), dumps, logs or docs
+<FilesMatch "(^\.|\.(sql|log|md|rst|bak|old|orig|swp|dist|cnf|ini)$|^index\.nginx-debian\.html$|^composer.*\.(json|lock|php)$)">
 	Require all denied
 </FilesMatch>
+
+# Security headers for static files (PHP pages send their own, with the CSP)
+<IfModule mod_headers.c>
+	Header always set X-Content-Type-Options "nosniff"
+	Header always set X-Frame-Options "SAMEORIGIN"
+	Header always set X-XSS-Protection "1; mode=block"
+	Header always set Referrer-Policy "strict-origin-when-cross-origin"
+	Header always unset X-Powered-By
+</IfModule>

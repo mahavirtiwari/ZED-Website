@@ -1,0 +1,6 @@
+# Minimal OpenSSL config for Password_transport (RSA key generation).
+# PHP on Windows has no default openssl.cnf; this file is outside the web root.
+[ req ]
+distinguished_name = req_distinguished_name
+
+[ req_distinguished_name ]

@@ -14,8 +14,8 @@ $path = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 if (preg_match('#^/(cms/)?(application|system)(/|$)|^/phpmailer(/|$)|/\.#i', $path)
 	OR preg_match('#^/(cms/)?(uploads|photogallery|slider)/.*\.(php\d?|phtml|phar)$#i', $path))
 {
-	http_response_code(403);
-	exit('Forbidden');
+	http_response_code(404);
+	exit('Not Found');
 }
 
 if ($path !== '/' && is_file($docroot.$path))

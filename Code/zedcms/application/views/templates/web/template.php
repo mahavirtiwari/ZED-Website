@@ -190,16 +190,6 @@
             }); 
         });
 </script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-99946113-1', 'auto');
-      ga('send', 'pageview');
-
-    </script>
     <!-- fb page script -->
     <div id="fb-root"></div>
     <!-- <script>(function(d, s, id) {
@@ -224,14 +214,10 @@
     <script type="text/javascript" src="<?php echo URL_ASSETS_JS;?>/jquery.nstSlider.js"></script>
     <script type="text/javascript" src="<?php echo URL_ASSETS_JS;?>/jquery.flexslider.js"></script>
     <script type="text/javascript" src="<?php echo URL_ASSETS_JS;?>/custom.isotope.js"></script>
-    <script type="text/javascript" src="<?php echo URL_ASSETS_JS;?>/custom.map.js"></script>
     <script type="text/javascript" src="<?php echo URL_ASSETS_JS;?>/custom.js"></script>
     <script type="text/javascript" src="<?php echo URL_ASSETS_JS;?>/rtd-toasty.js"></script>
     <script type="text/javascript" src="<?php echo URL_ASSETS_JS;?>/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="<?php echo URL_ASSETS_JS;?>/dataTables.bootstrap.min.js"></script>
-      <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqVIkdttPNjl5c5hKlc_Hk3bfXQQlf2Rc&callback=initMap">
-    </script>
     <script type="text/javascript">
      function validateform()
      {

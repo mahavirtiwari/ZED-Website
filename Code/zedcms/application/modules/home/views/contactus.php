@@ -30,7 +30,7 @@
 
 
                     <div class="col-md-8">
-                        <?php $this->load->view('zoho_form'); ?>
+                        <?php $this->load->view($contact_form_type === 'site' ? 'contact_form' : 'zoho_form'); ?>
                     </div>
 
 

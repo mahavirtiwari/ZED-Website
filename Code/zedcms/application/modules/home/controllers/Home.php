@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+require_once APPPATH.'third_party/zed/Zed_captcha.php';
 class Home extends MY_Controller
 {
 	public function __construct()
@@ -159,14 +160,30 @@ class Home extends MY_Controller
 	}
 	public function contactus()
 	{
+		// CMS Settings > Security: which form to show, and whether it has a captcha
+		$this->data['contact_form_type'] = zed_setting('contact_form_type', 'zoho') === 'site' ? 'site' : 'zoho';
+		$this->data['captcha'] = captcha_enabled('captcha_contact_us');
+		$this->data['query_categories'] = array('ZED Certification', 'Registration / Login', 'Payment', 'Training Program', 'Awareness Program', 'Complaint', 'Other');
+
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[100]');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[150]');
 		$this->form_validation->set_rules('phone', 'Phone', 'trim|max_length[100]');
 		$this->form_validation->set_rules('enterprise_name', 'Enterprise Name', 'trim|max_length[200]');
-		$this->form_validation->set_rules('query_category', 'Query Category', 'trim|max_length[200]');
-		$this->form_validation->set_rules('message', 'Message', 'trim|required');
-		if($this->input->post('submit') && $this->form_validation->run())
+		$this->form_validation->set_rules('query_category', 'Query Category', 'trim|required|in_list['.implode(',', $this->data['query_categories']).']');
+		$this->form_validation->set_rules('message', 'Message', 'trim|required|max_length[3000]');
+		if ($this->data['captcha'])
+		{
+			$this->form_validation->set_rules('captcha', 'Security code', 'trim|required');
+		}
+		// the Zoho Desk form posts to Zoho, so only the site's own form is handled here
+		$valid = $this->data['contact_form_type'] === 'site' && $this->input->post('submit') && $this->form_validation->run();
+		if ($valid && $this->data['captcha'] && ! Zed_captcha::check('contact', $this->input->post('captcha')))
+		{
+			$this->data['captcha_error'] = 'The security code was not correct. Please type the new code shown.';
+			$valid = FALSE;
+		}
+		if($valid)
 		{
 			$data['contact_name']=$this->input->post('name');
 			$data['contact_email']=$this->input->post('email');
@@ -197,7 +214,7 @@ class Home extends MY_Controller
 				
 				$success=sendEmail($subject,$message,$to,$cc);
 				
-				$this->session->set_flashdata('message', 'Your details submit successfully !');
+				$this->session->set_flashdata('message', 'Thank you. Your query has been submitted successfully.');
 				redirect(base_url().'contact-us');
 				
 			}

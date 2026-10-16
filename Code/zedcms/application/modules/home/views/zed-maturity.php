@@ -33,7 +33,7 @@
     else
     {
       disdiv+= '<div class="zed-discipline-box zed-matrix-table table-responsive">';
-      disdiv += "<table class='table table-bordered' style='table-layout: fixed;'><thead><th style='width: 150px;'>Parameter</th> <th>Level 1</th> <th>Level 2</th> <th>Level 3</th> <th>Level 4</th> <th>Level 5</th></thead><tbody>";
+      disdiv += "<table class='table table-bordered zed-table-fixed'><thead><th class='zed-col-param'>Parameter</th> <th>Level 1</th> <th>Level 2</th> <th>Level 3</th> <th>Level 4</th> <th>Level 5</th></thead><tbody>";
       $.each(data.discipline, function(index, element) {
         disdiv += "<tr>"+"<td>"+element.code+" - "+element.name+ "</td>"+"<td>"+element.level1_comment+ "</td>"+"<td>"+element.level2_comment+ "</td>"+"<td>"+element.level3_comment+ "</td>"+"<td>"+element.level4_comment+ "</td>"+"<td>"+element.level5_comment+ "</td>"+"</tr>";
         ;

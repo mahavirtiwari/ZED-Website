@@ -233,4 +233,35 @@ if(!function_exists('convertCurrency')){
 		return $currency;
 	}
 }
+
+/**
+ * A value from zed_global_config (CMS Settings), cached for the request.
+ * @return string|NULL  $default when the label does not exist
+ */
+if ( ! function_exists('zed_setting'))
+{
+	function zed_setting($label, $default = NULL)
+	{
+		static $cache = array();
+		if ( ! array_key_exists($label, $cache))
+		{
+			$CI =& get_instance();
+			$row = $CI->db->select('value')->where('label', $label)->limit(1)->get(TBL_GLOBAL)->row();
+			$cache[$label] = $row ? $row->value : $default;
+		}
+		return $cache[$label];
+	}
+}
+
+/**
+ * Is the captcha switched on for this form? (CMS Settings > Security)
+ * On unless the setting says '0', so a missing setting fails safe.
+ */
+if ( ! function_exists('captcha_enabled'))
+{
+	function captcha_enabled($label = 'captcha_contact_us')
+	{
+		return (string) zed_setting($label, '1') !== '0';
+	}
+}
 ?>

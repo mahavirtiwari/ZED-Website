@@ -21,6 +21,7 @@
 			<li><a href="<?php echo base_url();?>stakeholders"><i class="zi-stack"></i><span>Stakeholders</span></a></li>
 			<li><a href="<?php echo base_url();?>contactlist"><i class="zi-book"></i><span>Contacts</span></a></li>
 			<li><a href="<?php echo base_url();?>global_config"><i class="zi-cog"></i><span>Settings</span></a></li>
+			<li><a href="<?php echo base_url();?>global_config/security"><i class="zi-cog"></i><span>Security</span></a></li>
 		</ul>
 	</div>
 </div>

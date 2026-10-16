@@ -1,5 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+require_once dirname(FCPATH).'/application/third_party/zed/Zed_captcha.php';
+
 class Auth extends CI_Controller {
 
 	public $data = array();
@@ -57,9 +59,20 @@ class Auth extends CI_Controller {
 		//validate form input
 		$this->form_validation->set_rules('identity', str_replace(':', '', $this->lang->line('login_identity_label')), 'required');
 		$this->form_validation->set_rules('password', str_replace(':', '', $this->lang->line('login_password_label')), 'required');
+		// captcha (Settings > Security), checked before the password is tried
+		$this->data['captcha'] = captcha_enabled('captcha_cms_login');
+		if ($this->data['captcha'])
+		{
+			$this->form_validation->set_rules('captcha', 'Security code', 'required');
+		}
 
 		if ($this->form_validation->run() == true)
 		{
+			if ($this->data['captcha'] && ! Zed_captcha::check('login', $this->input->post('captcha')))
+			{
+				$this->session->set_flashdata('message', '<p>The security code was not correct. Please try again.</p>');
+				redirect('auth/login', 'refresh');
+			}
 			// check to see if the user is logging in
 			// check for "remember me"
 			$remember = (bool) $this->input->post('remember');
@@ -92,7 +105,7 @@ class Auth extends CI_Controller {
 				'type'  => 'text',
 				'value' => $this->form_validation->set_value('identity'),
 				'class' =>'form-control',
-				'placeholder'=>'Username',
+				'placeholder'=>'Email',
 				);
 			$this->data['password'] = array('name' => 'password',
 				'id'   => 'password',
@@ -166,6 +179,7 @@ class Auth extends CI_Controller {
 				'value' => $user->id,
 				);
 
+			$this->data['bread_crumb'] = render_bread_crumb(array('dashboard'=>'Dashboard','change_password'=>'Change Password'));
 			$this->data['page']='change_password';
 			// render
 			$this->_render_page(get_template(), $this->data);
@@ -202,7 +216,17 @@ class Auth extends CI_Controller {
 		{
 			$this->form_validation->set_rules('identity', $this->lang->line('forgot_password_validation_email_label'), 'required|valid_email');
 		}
+		$this->data['captcha'] = captcha_enabled('captcha_cms_login');
+		if ($this->data['captcha'])
+		{
+			$this->form_validation->set_rules('captcha', 'Security code', 'required');
+		}
 
+		if ($this->form_validation->run() == true && $this->data['captcha'] && ! Zed_captcha::check('forgot_password', $this->input->post('captcha')))
+		{
+			$this->session->set_flashdata('message', '<p>The security code was not correct. Please try again.</p>');
+			redirect('auth/forgot_password', 'refresh');
+		}
 
 		if ($this->form_validation->run() == false)
 		{
@@ -210,6 +234,7 @@ class Auth extends CI_Controller {
 			// setup the input
 			$this->data['identity'] = array('name' => 'identity',
 				'id' => 'identity',
+				'class' => 'form-control',
 				);
 
 			if ( $this->config->item('identity', 'ion_auth') != 'email' ){
@@ -290,12 +315,14 @@ class Auth extends CI_Controller {
 					'name' => 'new',
 					'id'   => 'new',
 					'type' => 'password',
+					'class' => 'form-control',
 					'pattern' => '^.{'.$this->data['min_password_length'].'}.*$',
 					);
 				$this->data['new_password_confirm'] = array(
 					'name'    => 'new_confirm',
 					'id'      => 'new_confirm',
 					'type'    => 'password',
+					'class'   => 'form-control',
 					'pattern' => '^.{'.$this->data['min_password_length'].'}.*$',
 					);
 				$this->data['user_id'] = array(

@@ -4,7 +4,7 @@
 #   powershell -ExecutionPolicy Bypass -File .localdev\start-local.ps1
 #
 # First run: initialises the MySQL data folder and imports DATABASE\zedcms.sql
-# followed by DATABASE\upgrade_mysql8.sql.
+# followed by DATABASE\upgrade_mysql8.sql and DATABASE\upgrade_2026_10_security.sql.
 
 $ErrorActionPreference = 'Stop'
 $root    = Split-Path -Parent $PSScriptRoot
@@ -52,6 +52,7 @@ if (-not $hasDb) {
     & "$mysqlBin\mysql.exe" --user=root --host=127.0.0.1 -e "CREATE DATABASE zedcms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
     cmd /c "`"$mysqlBin\mysql.exe`" --user=root --host=127.0.0.1 zedcms < `"$root\DATABASE\zedcms.sql`""
     cmd /c "`"$mysqlBin\mysql.exe`" --user=root --host=127.0.0.1 zedcms < `"$root\DATABASE\upgrade_mysql8.sql`""
+    cmd /c "`"$mysqlBin\mysql.exe`" --user=root --host=127.0.0.1 zedcms < `"$root\DATABASE\upgrade_2026_10_security.sql`""
     php "$dev\seed-local-admin.php"
 }
 

@@ -1,4 +1,9 @@
+# CMS front controller. The public site's .htaccess (one level up) also applies.
+Options -Indexes
+
 RewriteEngine On
+RewriteRule ^(application|system)(/|$) - [R=404,L,NC]
+RewriteRule (^|/)\.(?!well-known/) - [R=404,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]

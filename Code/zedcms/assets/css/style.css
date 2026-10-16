@@ -7309,3 +7309,16 @@ div#filters {
     width: 100%;
 }
  
+/* site Contact Us form and captcha (home/views/contact_form.php) */
+.zed-contact-form { margin-bottom: 30px; }
+.zed-contact-form h3 { margin-top: 0; margin-bottom: 20px; }
+.zed-captcha-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.zed-captcha-row img { border: 1px solid #d9dee4; border-radius: 3px; background: #f4f7fa; }
+.zed-captcha-row .btn { font-size: 18px; line-height: 1; padding: 8px 12px; }
+.zed-captcha-input { max-width: 280px; text-transform: uppercase; letter-spacing: 3px; }
+
+/* tables built by script (guidance-document.php, zed-maturity.php): classes, because
+   the Content-Security-Policy blocks style="" attributes in HTML added at runtime */
+.zed-table-fixed { table-layout: fixed; }
+.zed-table-fixed .zed-col-half { width: 50%; }
+.zed-table-fixed .zed-col-param { width: 150px; }

@@ -33,7 +33,7 @@
         var response=JSON.parse(response);
         if(response.success==true){
           disdiv+= '<div class="zed-discipline-box zed-matrix-table table-responsive">';
-          disdiv += "<table class='table table-bordered' style='table-layout: fixed;'><thead><th style='width: 50%;'>Name</th> <th>URL</th></thead><tbody>";
+          disdiv += "<table class='table table-bordered zed-table-fixed'><thead><th class='zed-col-half'>Name</th> <th>URL</th></thead><tbody>";
             $.each(response.discipline, function(index, element) {
               disdiv += "<tr>"+"<td>"+element.d_name+ "</td>"+"<td><a  target='_blank' href='"+element.d_url+"'>"+element.d_url+"</a></td>"+"</tr>";
               ;

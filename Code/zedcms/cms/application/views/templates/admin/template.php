@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<?php echo pwt_meta(); ?>
 	<title>ZED CMS Admin</title>
   <style type="text/css">
     img {
@@ -94,6 +95,8 @@
 <script src="<?php echo URL_ASSETS_JS; ?>/rtd-asky.js"></script>
 <script src="<?php echo URL_ASSETS_JS; ?>/bootstrap.min.js"></script>
 <script src="<?php echo URL_ASSETS_JS; ?>/zed-app.js"></script>
+<script src="<?php echo URL_ASSETS_JS; ?>/zed-pwt.js"></script>
+<script src="<?php echo URL_ASSETS_JS; ?>/zed-editor-styles.js"></script>
 
 <!-- jquery file upload js -->
 <script type="text/javascript">

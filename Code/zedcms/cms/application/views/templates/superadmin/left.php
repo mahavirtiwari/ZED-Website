@@ -29,6 +29,7 @@
 			<li><a href="<?php echo base_url();?>resources"><i class="zi-stack"></i><span>Resources</span></a></li>
 			<li><a href="<?php echo base_url();?>contactlist"><i class="zi-book"></i><span>Contacts</span></a></li>
 			<li><a href="<?php echo base_url();?>global_config"><i class="zi-cog"></i><span>Settings</span></a></li>
+			<li><a href="<?php echo base_url();?>global_config/security"><i class="zi-cog"></i><span>Security</span></a></li>
 			<li><a href="<?php echo base_url();?>auth"><i class="zi-head"></i><span>Users</span></a></li>
 		</ul>
 	</div>

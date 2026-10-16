@@ -106,3 +106,9 @@
  		display: none;
  	}
  }
+/* captcha (auth/views/_captcha.php) */
+.zed-captcha-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.zed-captcha-row img { border: 1px solid #d9dee4; border-radius: 3px; background: #f4f7fa; }
+.zed-captcha-refresh { font-size: 18px; line-height: 1; padding: 8px 12px; }
+#captcha { text-transform: uppercase; letter-spacing: 3px; }
+.zed-login-right h4 { margin-top: 0; }

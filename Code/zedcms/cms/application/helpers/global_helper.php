@@ -282,5 +282,57 @@ if( ! function_exists('crypto_rand_secure')){
 	 		return $token;
 	 	}
 	 }
-	
+
+/**
+ * A value from zed_global_config (Settings), cached for the request.
+ * @return string|NULL  $default when the label does not exist
+ */
+if ( ! function_exists('zed_setting'))
+{
+	function zed_setting($label, $default = NULL)
+	{
+		static $cache = array();
+		if ( ! array_key_exists($label, $cache))
+		{
+			$CI =& get_instance();
+			$CI->load->database();
+			$row = $CI->db->select('value')->where('label', $label)->limit(1)->get(TBL_GLOBAL)->row();
+			$cache[$label] = $row ? $row->value : $default;
+		}
+		return $cache[$label];
+	}
+}
+
+/**
+ * Is the captcha switched on for this form? (Settings > Security)
+ * On unless the setting says '0', so a missing setting fails safe.
+ */
+if ( ! function_exists('captcha_enabled'))
+{
+	function captcha_enabled($label = 'captcha_cms_login')
+	{
+		return (string) zed_setting($label, '1') !== '0';
+	}
+}
+
+/**
+ * <meta> tags with this session's password-encryption key and nonce,
+ * read by assets/js/zed-pwt.js (see libraries/Password_transport.php).
+ */
+if ( ! function_exists('pwt_meta'))
+{
+	function pwt_meta()
+	{
+		$CI =& get_instance();
+		$CI->load->library('password_transport');
+		$key = $CI->password_transport->public_key();
+		if ($key === '')
+		{
+			return '';
+		}
+		return '<meta name="zed-pwt-key" content="'.$key.'">'."\n"
+			.'<meta name="zed-pwt-nonce" content="'.$CI->password_transport->nonce().'">'."\n";
+	}
+}
+
 	?>

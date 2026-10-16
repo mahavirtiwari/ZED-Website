@@ -17,7 +17,6 @@
   <!-- own style css -->
   <link rel="stylesheet" type="text/css" href="<?php echo URL_ASSETS_CSS;?>/style.css" media="all" />
   <link rel="stylesheet" type="text/css" href="<?php echo URL_ASSETS_CSS;?>/responsive.css" media="all" />
-  <script type="text/javascript" src="<?php echo URL_ASSETS_JS;?>/jquery-2.2.3.min.js"></script>
 
 </head>
 <body id="page-top" data-spy="scroll">
@@ -25,9 +24,7 @@
   <div class="container">
     <div class="row">
       <div class="page-error-option">
-        <?php $base = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
-        $base .= '://'.$_SERVER['HTTP_HOST']; ?>
-        <img src="<?php echo (isset($base) ? $base : '');?>/assets/images/home01/Greenforest-404-page-img.png" alt="Greenforest-404-page-img" class="img-responsive" />
+        <img src="<?php echo SITEURL;?>/assets/images/home01/Greenforest-404-page-img.png" alt="Greenforest-404-page-img" class="img-responsive" />
         <h2><span>Oops,</span> Page Cannot be Found!</h2>
         <p>We are really sorry but the page you requested is missing :(</p>
         <a href="<?php echo (isset($base) ? $base : '');?>" class="btn btn-default">go back home</a>
