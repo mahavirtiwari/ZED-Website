@@ -7325,3 +7325,10 @@ div#filters {
 
 /* embedded web page (CMS > Pages > Special content) */
 .zed-embed-frame { width: 100%; min-height: 1600px; height: 100%; border: 0; }
+
+/* Bhashini language button (header): same look while the plugin's own stylesheet is loading or if it fails */
+.bhashini-plugin-container .bhashini-dropdown-btn { display: flex; background: transparent; border: 0; padding: 1px 6px; cursor: pointer; }
+.bhashini-plugin-container .bhashini-dropdown-btn:focus:not(:focus-visible) { outline: 0; }
+.bhashini-plugin-container .bhashini-dropdown { position: relative; }
+.bhashini-plugin-container .bhashini-dropdown-content { display: none; position: absolute; right: 0; z-index: 1000; background: #fff; }
+.bhashini-feedback-modal { display: none; }

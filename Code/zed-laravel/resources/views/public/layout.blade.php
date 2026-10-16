@@ -91,7 +91,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css') }}/jquery.nstSlider.css" media="all" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css') }}/flexslider.css" media="all" />
     <!-- own style css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css') }}/style.css?v=3" media="all" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css') }}/style.css?v=4" media="all" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css') }}/responsive.css" media="all" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css') }}/dataTables.bootstrap.min.css">
     <script type="text/javascript" src="{{ asset('assets/js') }}/jquery.min.js"></script>
