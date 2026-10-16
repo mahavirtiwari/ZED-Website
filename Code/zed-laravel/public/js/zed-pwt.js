@@ -57,7 +57,8 @@
 		if (event.defaultPrevented || !form || form.getAttribute('data-pwt-done')) {
 			return;
 		}
-		var fields = Array.prototype.filter.call(form.querySelectorAll('input[type="password"]'), function (f) {
+		// data-password: a password field the eye button has made readable (password-toggle.js)
+		var fields = Array.prototype.filter.call(form.querySelectorAll('input[type="password"], input[data-password]'), function (f) {
 			return f.name && f.value && !f.disabled;
 		});
 		// no WebCrypto (plain-HTTP page) or no key: post as before

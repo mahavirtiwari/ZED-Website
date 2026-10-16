@@ -18,6 +18,7 @@
         </div>
     </main>
     <script src="{{ asset('js/zed-pwt.js') }}"></script>
+    <script src="{{ asset('js/password-toggle.js') }}"></script>
     <script src="{{ asset('js/zed-captcha.js') }}"></script>
 </body>
 </html>

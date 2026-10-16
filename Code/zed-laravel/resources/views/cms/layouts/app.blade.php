@@ -71,6 +71,7 @@
 <script src="{{ asset('vendor/trumbowyg/plugins/fontsize/trumbowyg.fontsize.min.js') }}"></script>
 <script src="{{ asset('vendor/trumbowyg/plugins/cleanpaste/trumbowyg.cleanpaste.min.js') }}"></script>
 <script src="{{ asset('js/zed-pwt.js') }}"></script>
+<script src="{{ asset('js/password-toggle.js') }}"></script>
 <script src="{{ asset('js/zed-editor-styles.js') }}"></script>
 <script src="{{ asset('js/cms.js') }}"></script>
 </body>
