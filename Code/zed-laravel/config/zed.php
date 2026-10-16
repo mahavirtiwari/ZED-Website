@@ -18,10 +18,19 @@ return [
         'zed-admin.retedys.com', 'zed-web2.retedys.com', 'zed-staging.qci.org.in',
     ],
 
+    /*
+     * CA certificates file (PEM) for outgoing HTTPS to the ZED portal APIs.
+     * Only for local Windows development, where PHP has no CA bundle and
+     * antivirus may inspect HTTPS (.localdev/export-windows-ca.ps1 writes one).
+     * Leave empty on servers: the system CA bundle is used.
+     */
+    'http_ca_file' => env('ZED_HTTP_CA_FILE'),
+
     // Remote APIs used by the public site
     'dashboard_counts_url' => env('ZED_DASHBOARD_COUNTS_URL', 'https://loginzed.msme.gov.in/dashboard/getcounts'),
     'verify_url' => env('ZED_VERIFY_URL', 'https://login.zed.org.in/msme/GetDetailsByUdyam'),
     'verify_token' => env('ZED_VERIFY_TOKEN'),
+    'bhashini_url' => env('ZED_BHASHINI_URL', 'https://translation-plugin.bhashini.co.in/v3/website_translation_utility.js'),
 
     // Contact Us (website form) recipients
     'contact_to' => env('ZED_CONTACT_TO', 'zedtp@qcin.org'),

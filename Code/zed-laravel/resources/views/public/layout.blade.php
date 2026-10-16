@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- home Page start  seo  -->
     <?php if(isset($home_seo)&& isset($home_seo['home_seo_title'])){?>
-    <title><?php echo $home_seo['home_seo_title']?> | {{ site_text('site_title_suffix') }}</title>
+    <title><?php echo $home_seo['home_seo_title']?> | {{ site_text('home_title_suffix') }}</title>
     <?php } ?>
     <?php 
     if(isset($home_seo)&& isset($home_seo['home_seo_keywords'])){
@@ -264,5 +264,9 @@
         } );
     } ).draw();
     </script>
+    @if (site_flag('header_show_bhashini'))
+    {{-- Bhashini language menu (CMS > Settings > Header and footer); see public/js/bhashini.js --}}
+    <script src="{{ asset('js/bhashini.js') }}" nonce="{{ Vite::cspNonce() }}" data-src="{{ config('zed.bhashini_url') }}"></script>
+    @endif
 </body>
 </html>

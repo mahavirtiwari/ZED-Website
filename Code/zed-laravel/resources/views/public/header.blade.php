@@ -11,6 +11,9 @@
               <a href="{{ site_url('header_qci_url') }}" target="_blank" rel="noopener" class="img-responsive" @unless (site_flag('header_show_qci')) style="display:none;" @endunless>
                 <img src="{{ site_image('header_qci_logo') }}"  alt="QCI Logo">
               </a>
+              @if (site_flag('header_show_bhashini'))
+              <div class="bhashini-plugin-container"></div>
+              @endif
         </div><!-- .header-top --> 
     </div><!-- .container -->
   </div><!-- .bg-header-top -->

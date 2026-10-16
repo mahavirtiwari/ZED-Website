@@ -11,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -132,7 +131,7 @@ class SiteController extends Controller
         $result = ['udyamNumber' => $udyam, 'certificationNumber' => $certificate];
         if ($request->isMethod('post') && $udyam !== '' && $certificate !== '') {
             try {
-                $result['verifyCertification'] = Http::connectTimeout(3)->timeout(10)->acceptJson()->get(config('zed.verify_url'), [
+                $result['verifyCertification'] = zed_http()->get(config('zed.verify_url'), [
                     'token' => config('zed.verify_token'),
                     'udyamNumber' => Str::limit($udyam, 40, ''),
                     'certificationNumber' => Str::limit($certificate, 60, ''),

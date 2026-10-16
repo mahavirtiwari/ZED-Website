@@ -157,8 +157,8 @@
   <div class="container">
     <div class="row ">
       <div class="col-md-12">
-        {{-- CMS > ZED rating image (first active one); the built-in image when there is none --}}
-        <img src="{{ !empty($ratingImage->image_path) ? media_url($ratingImage->image_path) : asset('assets/images/Steps-img.png') }}" alt="{{ !empty($ratingImage->name) ? $ratingImage->name : 'ZED certification steps' }}" />
+        {{-- CMS > Settings > Home page > Certification steps image (built-in Steps-img.png until replaced) --}}
+        <img src="{{ site_image('home_steps_image') }}" alt="ZED certification steps" />
       </div>
     </div>
   </div>

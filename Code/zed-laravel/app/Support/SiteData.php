@@ -4,7 +4,6 @@ namespace App\Support;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 /**
  * Queries behind the public site (ported from the CodeIgniter Home_model).
@@ -55,7 +54,7 @@ class SiteData
         }
         $counts = [];
         try {
-            $response = Http::connectTimeout(3)->timeout(10)->acceptJson()->withBody('{}', 'application/json')->post(config('zed.dashboard_counts_url'));
+            $response = zed_http()->withBody('{}', 'application/json')->post(config('zed.dashboard_counts_url'));
             $counts = $response->json('Table.0') ?? [];
         } catch (\Throwable) {
             $counts = [];

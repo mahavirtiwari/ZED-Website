@@ -8,10 +8,11 @@
 return [
     'csp' => [
         // Zoho Desk contact form
-        'script-src' => ['https://js.zohostatic.in'],
-        'style-src' => ['https://fonts.googleapis.com', 'https://js.zohostatic.in'],
+        // and the Bhashini translation plugin (public/js/bhashini.js)
+        'script-src' => ['https://js.zohostatic.in', 'https://translation-plugin.bhashini.co.in'],
+        'style-src' => ['https://fonts.googleapis.com', 'https://js.zohostatic.in', 'https://translation-plugin.bhashini.co.in'],
         'font-src' => ['https://fonts.gstatic.com'],
-        'connect-src' => ['https://desk.zoho.in'],
+        'connect-src' => ['https://desk.zoho.in', 'https://translation-plugin.bhashini.co.in'],
         // content images can come from other sites; uploads preview as blob:
         'img-src' => ['https:', 'blob:'],
         // embedded videos, the MSME dashboard and maps

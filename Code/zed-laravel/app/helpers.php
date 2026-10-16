@@ -89,6 +89,20 @@ if (! function_exists('youtube_embed_url')) {
     }
 }
 
+if (! function_exists('zed_http')) {
+    /** HTTP client for the ZED portal APIs (short timeouts; optional CA file, config zed.http_ca_file). */
+    function zed_http(): \Illuminate\Http\Client\PendingRequest
+    {
+        $client = \Illuminate\Support\Facades\Http::connectTimeout(3)->timeout(10)->acceptJson();
+        $caFile = (string) config('zed.http_ca_file');
+        if ($caFile !== '') {
+            $client = $client->withOptions(['verify' => realpath(base_path($caFile)) ?: $caFile]);
+        }
+
+        return $client;
+    }
+}
+
 if (! function_exists('captcha_enabled')) {
     /** Captcha switch (CMS > Security). On unless the setting is '0'. */
     function captcha_enabled(string $label): bool
