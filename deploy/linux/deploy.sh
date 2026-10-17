@@ -119,8 +119,10 @@ chown -R "$ZED_USER:$ZED_USER" "$SHARED/storage" "$SHARED/media"
 
 # --- 4. PHP libraries, database changes, caches -----------------------------------------
 step 'Installing PHP libraries (composer install)'
-(cd "$RELEASE" && COMPOSER_ALLOW_SUPERUSER=1 "$PHP_BIN" /usr/local/bin/composer install \
-    --no-dev --optimize-autoloader --no-interaction --no-progress)
+need_https https://repo.packagist.org/packages.json 'PHP libraries (Packagist)'
+(cd "$RELEASE" && COMPOSER_ALLOW_SUPERUSER=1 timeout 1200 "$PHP_BIN" /usr/local/bin/composer install \
+    --no-dev --optimize-autoloader --no-interaction --no-progress) \
+    || die 'composer install failed or took longer than 20 minutes (see the messages above).'
 chown -R root:root "$RELEASE"
 chmod -R u=rwX,go=rX "$RELEASE"
 chown -R "$ZED_USER:$ZED_USER" "$RELEASE/bootstrap/cache" "$SHARED/storage"   # composer's artisan call ran as root

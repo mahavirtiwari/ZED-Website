@@ -37,6 +37,19 @@ start_log() {
     echo "Log file: $LOG_FILE"
 }
 
+# Downloads with time limits, so a blocked connection fails instead of waiting forever.
+fetch() { curl -fsSL --connect-timeout 15 --max-time 300 --retry 2 "$@"; }
+
+need_https() {  # need_https URL DESCRIPTION
+    local err
+    if ! err=$(curl -sS -o /dev/null --connect-timeout 10 --max-time 30 "$1" 2>&1); then
+        die "This server cannot reach $1 ($2): ${err:-no answer}.
+       The server must be allowed to open HTTPS (port 443) connections to the internet:
+       check the AWS security group OUTBOUND rules, the subnet's network ACL / route table
+       (internet or NAT gateway) and any proxy. Then run the same command again."
+    fi
+}
+
 random_secret() {  # letters and digits, safe in .env, SQL and URLs
     python3 -c 'import secrets, string; a = string.ascii_letters + string.digits; print("".join(secrets.choice(a) for _ in range(int("'"${1:-32}"'"))))'
 }

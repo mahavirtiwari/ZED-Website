@@ -91,14 +91,19 @@ ok "pool $ZED_USER listening on $PHP_SOCK"
 
 step 'Composer'
 if [[ ! -x /usr/local/bin/composer ]]; then
+    need_https https://getcomposer.org/installer 'Composer download'
     tmp=$(mktemp -d)
-    expected=$(curl -fsSL https://composer.github.io/installer.sig)
-    curl -fsSL https://getcomposer.org/installer -o "$tmp/composer-setup.php"
+    expected=$(fetch https://composer.github.io/installer.sig)
+    fetch https://getcomposer.org/installer -o "$tmp/composer-setup.php"
     actual=$("$PHP_BIN" -r "echo hash_file('sha384', '$tmp/composer-setup.php');")
     [[ $expected == "$actual" ]] || die 'Composer installer checksum mismatch.'
-    "$PHP_BIN" "$tmp/composer-setup.php" --quiet --install-dir=/usr/local/bin --filename=composer
+    timeout 300 "$PHP_BIN" "$tmp/composer-setup.php" --quiet --install-dir=/usr/local/bin --filename=composer \
+        || die 'Composer setup did not finish in 5 minutes (it downloads from getcomposer.org over HTTPS).'
     rm -rf "$tmp"
 fi
+# the website's PHP libraries come from these sites (deploy.sh), the dashboard figures from the ZED portal
+need_https https://repo.packagist.org/packages.json 'PHP libraries (Packagist)'
+need_https https://codeload.github.com 'PHP libraries (GitHub downloads)'
 ok "$("$PHP_BIN" /usr/local/bin/composer --version 2>/dev/null | head -1)"
 
 step 'MySQL'
